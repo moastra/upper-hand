@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
     getPostsByUsers
-} = require('../helpers/dataHelpers');
+} = require('../db/helpers/dataHelpers');
 
 module.exports = ({
     getUsers,
