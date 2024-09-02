@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 // const http = require('http');
-const { Server } = require('socket.io');
+const { Server } = require("socket.io");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -11,25 +11,23 @@ const http = app.listen(3001, () => {
 
 const io = new Server(http);
 
-io.on('connection', (client) => {
-  console.log('a user connected:', client.id);
+io.on("connection", (client) => {
+  console.log("a user connected:", client.id);
 
   // Handle 'signal' events sent from clients
-  client.on('signal', (data) => {
-    io.to(data.to).emit('signal', data);
+  client.on("signal", (data) => {
+    io.to(data.to).emit("signal", data);
   });
 
   // Handle chatMessage events
-  client.on('chatMessage', (msg) => {
-    io.emit('chatMessage', msg);
+  client.on("chatMessage", (msg) => {
+    io.emit("chatMessage", msg);
   });
 
-  client.on('disconnect', () => {
-    console.log('user disconnected:', client.id);
+  client.on("disconnect", () => {
+    console.log("user disconnected:", client.id);
   });
 });
-
-
 
 // const express = require('express');
 // const http = require('http');
