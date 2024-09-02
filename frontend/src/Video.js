@@ -6,11 +6,8 @@ import {
 // import socket from "./socket";
 import Peer from "peerjs";
 import React, { useEffect, useRef, useState } from "react";
-<<<<<<< HEAD
 import "./Video.css";
-=======
-import io from 'socket.io-client';
->>>>>>> 7b7cf7bdd68acd0ee582f34cec9d084a4f20dbdb
+import io from "socket.io-client";
 
 const Video = () => {
   const [peerId, setPeerId] = useState("");
@@ -21,7 +18,6 @@ const Video = () => {
   const peerInstance = useRef(null);
   const canvasRef = useRef(null);
   const [gestureRecognizer, setGestureRecognizer] = useState(null);
-<<<<<<< HEAD
 
   // Load the hand gesture model
   useEffect(() => {
@@ -46,37 +42,6 @@ const Video = () => {
     loadModel();
   }, []);
 
-=======
-  const [socket, setSocket] = useState();
-
-  useEffect(() => {
-    const socket = io();
-    setSocket(socket);
-    return () => socket.disconnect('chatMessage');
-  }, []);
-
-  // useEffect(() => {
-  //   const loadModel = async () => {
-  //     try {
-  //       const vision = await FilesetResolver.forVisionTasks(
-  //         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.15/wasm/"
-  //       );
-  //       const recognizer = await GestureRecognizer.createFromOptions(vision, {
-  //         baseOptions: {
-  //           modelAssetPath:
-  //             "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
-  //           delegate: "GPU",
-  //         },
-  //         runningMode: "VIDEO",
-  //       });
-  //       setGestureRecognizer(recognizer);
-  //     } catch (error) {
-  //       console.error("Error loading gesture recognizer model:", error);
-  //     }
-  //   };
-  //   loadModel();
-  // }, []);
->>>>>>> 7b7cf7bdd68acd0ee582f34cec9d084a4f20dbdb
   useEffect(() => {
     // Initialize PeerJS
     peerInstance.current = new Peer();
@@ -85,7 +50,6 @@ const Video = () => {
     peerInstance.current.on("open", (id) => {
       setPeerId(id);
     });
-
 
     // Handle incoming call
     peerInstance.current.on("call", (call) => {
@@ -104,9 +68,9 @@ const Video = () => {
     // Inside the useEffect or other relevant function
     // peerInstance.current.on("signal", (signal) => {
     //   socket.emit("signal", { to: remotePeerId, from: peerId, signal });
-    });
+  });
 
-    // Handle signals received from other peers through socket.io
+  // Handle signals received from other peers through socket.io
   //   socket.on("signal", (data) => {
   //     const { from, signal } = data;
   //     if (peerInstance.current) {
@@ -223,6 +187,6 @@ const Video = () => {
       <div id="gesture_output"></div>
     </div>
   );
-}
+};
 
 export default Video;
