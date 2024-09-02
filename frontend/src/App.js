@@ -1,9 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
-import Peer from "peerjs";
-import Chat from "./Chat";
-import socket from "./socket";
-import Video from "./Video";
-
 const App = () => {
   return (
     <div className="App">
@@ -13,7 +7,6 @@ const App = () => {
   );
 };
 
-export default App;
 
 // import React from 'react';
 // import Chat from './Chat';
