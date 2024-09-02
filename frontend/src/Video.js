@@ -6,6 +6,7 @@ import {
 import socket from "./socket";
 import Peer from "peerjs";
 import React, { useEffect, useRef, useState } from "react";
+import "./Video.css";
 
 const Video = () => {
   const [peerId, setPeerId] = useState("");
@@ -40,61 +41,56 @@ const Video = () => {
     loadModel();
   }, []);
 
-  // Initialize PeerJS and handle peer events
   useEffect(() => {
+    // Initialize PeerJS
     peerInstance.current = new Peer();
 
+    // Set your own peer ID
     peerInstance.current.on("open", (id) => {
       setPeerId(id);
     });
 
+    // Handle incoming call
     peerInstance.current.on("call", (call) => {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
         .then((stream) => {
           localVideoRef.current.srcObject = stream;
-          call.answer(stream);
+          call.answer(stream); // Answer the call with your own video stream
 
           call.on("stream", (remoteStream) => {
             remoteVideoRef.current.srcObject = remoteStream;
           });
-        })
-        .catch((error) =>
-          console.error("Error accessing media devices:", error)
-        );
+        });
     });
 
+    // Inside the useEffect or other relevant function
     peerInstance.current.on("signal", (signal) => {
       socket.emit("signal", { to: remotePeerId, from: peerId, signal });
     });
 
+    // Handle signals received from other peers through socket.io
     socket.on("signal", (data) => {
       const { from, signal } = data;
       if (peerInstance.current) {
         peerInstance.current.signal(signal);
       }
     });
+  }, []);
 
-    return () => {
-      peerInstance.current.destroy(); // Clean up PeerJS instance on component unmount
-    };
-  }, [remotePeerId, peerId]);
-
-  // Call a peer
   const callPeer = (id) => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: true, audio: false })
       .then((stream) => {
         localVideoRef.current.srcObject = stream;
 
-        const call = peerInstance.current.call(id, stream);
+        const call = peerInstance.current.call(id, stream); // Call the remote peer by their peer ID
         call.on("stream", (remoteStream) => {
           remoteVideoRef.current.srcObject = remoteStream;
         });
 
         setConnected(true);
-      })
-      .catch((error) => console.error("Error accessing media devices:", error));
+      });
   };
 
   // Gesture recognition
@@ -168,12 +164,14 @@ const Video = () => {
   return (
     <div>
       <h1>Video Chat</h1>
-      <div>
+      <div className="video-container">
         <video ref={localVideoRef} autoPlay muted />
         <video ref={remoteVideoRef} autoPlay />
-        <canvas ref={canvasRef} style={{ position: "absolute" }} />
+        <div className="canvas-container">
+          <canvas ref={canvasRef} />
+        </div>
       </div>
-      <div>
+      <div className="controls">
         <h3>Your Peer ID: {peerId}</h3>
         <input
           type="text"
@@ -185,7 +183,7 @@ const Video = () => {
           Call
         </button>
       </div>
-      <div id="gesture_output" style={{ display: "none" }}></div>
+      <div id="gesture_output"></div>
     </div>
   );
 };
