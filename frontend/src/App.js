@@ -3,7 +3,7 @@ import Peer from 'peerjs';
 import Chat from './Chat';
 import socket from './socket';
 
-const VideoChat = () => {
+const Video = () => {
   const [peerId, setPeerId] = useState('');
   const [remotePeerId, setRemotePeerId] = useState('');
   const [connected, setConnected] = useState(false);
@@ -84,7 +84,7 @@ const VideoChat = () => {
   );
 };
 
-export default VideoChat;
+export default Video;
 
 
 // import React from 'react';

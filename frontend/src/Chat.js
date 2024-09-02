@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+const socket = io('172.24.64.1:5000');
 
 const Chat = () => {
   const [message, setMessage] = useState('');
