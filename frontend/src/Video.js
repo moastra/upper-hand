@@ -3,9 +3,10 @@ import {
   FilesetResolver,
   DrawingUtils,
 } from "@mediapipe/tasks-vision";
-import socket from "./socket";
+// import socket from "./socket";
 import Peer from "peerjs";
 import React, { useEffect, useRef, useState } from "react";
+import io from 'socket.io-client';
 
 const Video = () => {
   const [peerId, setPeerId] = useState("");
@@ -16,6 +17,14 @@ const Video = () => {
   const peerInstance = useRef();
   const canvasRef = useRef(null);
   const [gestureRecognizer, setGestureRecognizer] = useState(null);
+  const [socket, setSocket] = useState();
+
+  useEffect(() => {
+    const socket = io();
+    setSocket(socket);
+    return () => socket.disconnect('chatMessage');
+  }, []);
+
   // useEffect(() => {
   //   const loadModel = async () => {
   //     try {
@@ -46,6 +55,7 @@ const Video = () => {
       setPeerId(id);
     });
 
+
     // Handle incoming call
     peerInstance.current.on("call", (call) => {
       navigator.mediaDevices
@@ -61,18 +71,18 @@ const Video = () => {
     });
 
     // Inside the useEffect or other relevant function
-    peerInstance.current.on("signal", (signal) => {
-      socket.emit("signal", { to: remotePeerId, from: peerId, signal });
+    // peerInstance.current.on("signal", (signal) => {
+    //   socket.emit("signal", { to: remotePeerId, from: peerId, signal });
     });
 
     // Handle signals received from other peers through socket.io
-    socket.on("signal", (data) => {
-      const { from, signal } = data;
-      if (peerInstance.current) {
-        peerInstance.current.signal(signal);
-      }
-    });
-  }, []);
+  //   socket.on("signal", (data) => {
+  //     const { from, signal } = data;
+  //     if (peerInstance.current) {
+  //       peerInstance.current.signal(signal);
+  //     }
+  //   });
+  // }, []);
 
   const callPeer = (id) => {
     navigator.mediaDevices
@@ -109,6 +119,6 @@ const Video = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Video;
