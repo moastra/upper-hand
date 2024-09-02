@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('172.24.64.1:5000');
 
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState();
 
   useEffect(() => {
+    const socket = io();
+    setSocket(socket);
     socket.on('chatMessage', (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
 
-    return () => {
-      socket.off('chatMessage');
-    };
+    return () => socket.disconnect('chatMessage');
   }, []);
 
   const sendMessage = (e) => {
