@@ -1,3 +1,7 @@
+import React from "react";
+import Chat from "./Chat";
+import Video from "./Video";
+
 const App = () => {
   return (
     <div className="App">
@@ -7,10 +11,6 @@ const App = () => {
   );
 };
 
-
-// import React from 'react';
-// import Chat from './Chat';
-
 // function App() {
 //   return (
 //     <div className="App">
@@ -19,4 +19,4 @@ const App = () => {
 //   );
 // }
 
-// export default App;
+export default App;
