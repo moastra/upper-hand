@@ -2,36 +2,33 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 
+const PORT = process.env.PORT || 5000;
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*", // React app URL
-    methods: ["GET", "POST"]
-  }
+
+const http = app.listen(5000, () => {
+  console.log(`Server listening on PORT: ${PORT}`);
 });
 
-io.on('connection', (socket) => {
-  console.log('a user connected:', socket.id);
+const io = new Server(http);
 
-  // Handle signaling data sent from clients
-  socket.on('signal', (data) => {
+io.on('connection', (client) => {
+  console.log('a user connected:', client.id);
+
+  // Handle 'signal' events sent from clients
+  client.on('signal', (data) => {
     io.to(data.to).emit('signal', data);
   });
 
-  // Listen for incoming messages
-  socket.on('chatMessage', (msg) => {
+  // Handle chatMessage events
+  client.on('chatMessage', (msg) => {
     io.emit('chatMessage', msg);
   });
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected:', socket.id);
+  client.on('disconnect', () => {
+    console.log('user disconnected:', client.id);
   });
 });
 
-server.listen(5000, '0.0.0.0', () => {
-  console.log('Server listening on http://localhost:5000');
-});
 
 
 // const express = require('express');
