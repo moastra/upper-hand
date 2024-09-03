@@ -68,7 +68,7 @@ const Video = () => {
     // Inside the useEffect or other relevant function
     // peerInstance.current.on("signal", (signal) => {
     //   socket.emit("signal", { to: remotePeerId, from: peerId, signal });
-  });
+  }, []);
 
   // Handle signals received from other peers through socket.io
   //   socket.on("signal", (data) => {
