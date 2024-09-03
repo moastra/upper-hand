@@ -1,30 +1,51 @@
-/* Video.css */
-.video-container {
+/* Ensure the container takes up the full viewport height */
+.container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 80%;
-  margin: 0 auto;
+  flex-direction: column;
+  height: 100vh;
+  position: relative; /* Needed for absolute positioning of the result box */
+  overflow: hidden; /* Prevent scrolling */
 }
 
-.video-container video {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 45%;
+/* Fixed position for top video */
+.video-top {
+  position: fixed;
+  top: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  max-width: 300px;
+  max-height: 300px;
+  width: auto; /* Allow width to fit content */
+  height: auto; /* Allow height to fit content */
+  z-index: 1; /* Ensure it is below the result box */
+}
+
+/* Fixed position for bottom video */
+.video-bottom {
+  position: fixed;
+  bottom: 250px; /* Adjusted for space between the bottom video and the controls */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  max-width: 300px;
+  max-height: 300px;
+  width: auto; /* Allow width to fit content */
+  height: auto; /* Allow height to fit content */
+  z-index: 1; /* Ensure it is below the result box */
+}
+
+/* Ensure videos take up the max height and width but do not exceed 300px */
+.video-top video,
+.video-bottom video {
   max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* Ensures the video covers the area without distortion */
 }
 
-.video-container .canvas-container {
+/* Style for canvas container */
+.canvas-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.video-container canvas {
-  display: none;
   top: 0;
   left: 0;
   width: 100%;
@@ -32,17 +53,40 @@
   pointer-events: none; /* So it doesn’t capture mouse events */
 }
 
+/* Ensure canvas takes up the full size of its container */
+.canvas-container canvas {
+  width: 100%;
+  height: 100%;
+  display: none; /* Hide canvas if not needed */
+}
+
+/* Controls styling */
 .controls {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 1rem;
+  margin: 1rem;
+  z-index: 10; /* Ensure controls are above video */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Optional: background for readability */
+  padding: 1rem;
+  border-radius: 8px;
 }
 
+/* Controls heading */
 .controls h3 {
   margin-bottom: 0.5rem;
 }
 
+/* Input fields */
 .controls input {
   padding: 0.5rem;
   margin-bottom: 0.5rem;
@@ -51,6 +95,7 @@
   width: 200px;
 }
 
+/* Buttons */
 .controls button {
   padding: 0.5rem 1rem;
   border: none;
@@ -74,4 +119,22 @@
   border-radius: 4px;
   width: 300px;
   text-align: center;
+}
+
+/* Centered result box */
+.result-box {
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 150px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-size: 1.5rem;
+  z-index: 5; /* Ensure result box is above videos */
 }

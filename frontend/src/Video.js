@@ -7,6 +7,28 @@ import Peer from "peerjs";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import "./Video.css";
 
+const gestureToChoice = {
+  Closed_Fist: "Rock",
+  Open_Palm: "Paper",
+  Victory: "Scissors",
+};
+
+const determineWinner = (localChoice, remoteChoice) => {
+  if (localChoice === remoteChoice) {
+    return "Draw";
+  }
+  switch (localChoice) {
+    case "Rock":
+      return remoteChoice === "Scissors" ? "Win" : "Lose";
+    case "Paper":
+      return remoteChoice === "Rock" ? "Win" : "Lose";
+    case "Scissors":
+      return remoteChoice === "Paper" ? "Win" : "Lose";
+    default:
+      return "Invalid";
+  }
+};
+
 const Video = () => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -20,6 +42,8 @@ const Video = () => {
   const [gestureRecognizer, setGestureRecognizer] = useState(null);
   const [dataConnection, setDataConnection] = useState(null);
   const [gestureData, setGestureData] = useState("");
+  const [remoteData, setRemoteData] = useState("");
+  const [gameResult, setGameResult] = useState(""); // State to store the game result
 
   // Load the hand gesture model
   useEffect(() => {
@@ -56,11 +80,12 @@ const Video = () => {
       setDataConnection(conn);
 
       conn.on("data", (data) => {
-        console.log("Received gesture data:", data); // Log received data
+        console.log("Received gesture data:", data);
+        setRemoteData(data); // Update state with received gesture
       });
 
       conn.on("error", (err) => {
-        console.error("Connection error:", err); // Log connection errors
+        console.error("Connection error:", err);
       });
     });
 
@@ -84,39 +109,41 @@ const Video = () => {
       .then((stream) => {
         localVideoRef.current.srcObject = stream;
 
-        const call = peerInstance.current.call(id, stream); // Call the remote peer by their peer ID
+        const call = peerInstance.current.call(id, stream);
         call.on("stream", (remoteStream) => {
           remoteVideoRef.current.srcObject = remoteStream;
         });
 
-        // Establish data connection
         const conn = peerInstance.current.connect(id);
         conn.on("open", () => {
           setDataConnection(conn);
-          console.log("Data connection established"); // Log connection establishment
+          console.log("Data connection established");
         });
 
         conn.on("error", (err) => {
-          console.error("Connection error:", err); // Log connection errors
+          console.error("Connection error:", err);
         });
 
         conn.on("close", () => {
           console.log("Data connection closed");
-          setDataConnection(null); // Reset the data connection
+          setDataConnection(null);
         });
 
         setConnected(true);
       });
   };
 
-  const sendGestureData = (categoryName) => {
-    if (dataConnection && dataConnection.open) {
-      console.log("Sending gesture data:", categoryName); // Log data being sent
-      dataConnection.send(categoryName);
-    } else {
-      console.warn("No data connection available or connection is closed.");
-    }
-  };
+  const sendGestureData = useCallback(
+    (categoryName) => {
+      if (dataConnection && dataConnection.open) {
+        console.log("Sending gesture data:", categoryName);
+        dataConnection.send(categoryName);
+      } else {
+        console.warn("No data connection available or connection is closed.");
+      }
+    },
+    [dataConnection]
+  );
 
   const handleCountdownButtonClick = () => {
     setIsCountdownActive(true);
@@ -135,7 +162,6 @@ const Video = () => {
     }, 1000);
   };
 
-  // Gesture recognition
   useEffect(() => {
     if (gestureRecognizer && localVideoRef.current) {
       const video = localVideoRef.current;
@@ -195,20 +221,35 @@ const Video = () => {
           requestAnimationFrame(predict);
         } else {
           console.warn("Video dimensions are not valid.");
-          requestAnimationFrame(predict); // Continue polling
+          requestAnimationFrame(predict);
         }
       };
 
       predict();
     }
-  }, [gestureRecognizer, sendGestureData]); // Add sendGestureData to dependencies
+  }, [gestureRecognizer, sendGestureData]);
+
+  useEffect(() => {
+    if (gestureData && remoteData) {
+      const localChoice = gestureToChoice[gestureData] || "Invalid";
+      const remoteChoice = gestureToChoice[remoteData] || "Invalid";
+      const result = determineWinner(localChoice, remoteChoice);
+      setGameResult(result);
+    }
+  }, [gestureData, remoteData]);
 
   return (
-    <div>
-      <h1>Video Chat</h1>
-      <div className="video-container">
-        <video ref={localVideoRef} autoPlay muted />
-        <video ref={remoteVideoRef} autoPlay />
+    <div className="container">
+      <div className="video-sections">
+        <div className="video-top">
+          <video ref={localVideoRef} autoPlay muted />
+        </div>
+        <div className="result-box">
+          <p>{gameResult}</p>
+        </div>
+        <div className="video-bottom">
+          <video ref={remoteVideoRef} autoPlay />
+        </div>
         <div className="canvas-container">
           <canvas ref={canvasRef} />
         </div>
