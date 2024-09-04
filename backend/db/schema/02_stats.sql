@@ -1,4 +1,3 @@
--- Drop the table if it exists
 DROP TABLE IF EXISTS stats CASCADE;
 
 -- Create the stats table

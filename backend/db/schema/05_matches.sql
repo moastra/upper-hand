@@ -1,4 +1,3 @@
--- Drop the table if it exists
 DROP TABLE IF EXISTS matches CASCADE;
 
 -- Create the matches table
