@@ -44,6 +44,8 @@ const Video = () => {
   const [gestureData, setGestureData] = useState("");
   const [remoteData, setRemoteData] = useState("");
   const [gameResult, setGameResult] = useState(""); // State to store the game result
+  const [countdownStarted, setCountdownStarted] = useState(false);
+  const [remoteCountdownStarted, setRemoteCountdownStarted] = useState(false);
 
   // Load the hand gesture model
   useEffect(() => {
@@ -78,10 +80,10 @@ const Video = () => {
 
     peerInstance.current.on("connection", (conn) => {
       setDataConnection(conn);
-
+      //
       conn.on("data", (data) => {
-        console.log("Received gesture data:", data);
-        setRemoteData(data); // Update state with received gesture
+        console.log("Received gesture data:", data.gestureData);
+        setRemoteData(data.gestureData); // Update state with received gesture from connector
       });
 
       conn.on("error", (err) => {
@@ -119,7 +121,10 @@ const Video = () => {
           setDataConnection(conn);
           console.log("Data connection established");
         });
-
+        conn.on("data", (data) => {
+          console.log("Received gesture data:", data);
+          setRemoteData(data.gestureData); // Update state with received gesture from host
+        });
         conn.on("error", (err) => {
           console.error("Connection error:", err);
         });
@@ -137,7 +142,7 @@ const Video = () => {
     (categoryName) => {
       if (dataConnection && dataConnection.open) {
         console.log("Sending gesture data:", categoryName);
-        dataConnection.send(categoryName);
+        dataConnection.send({ type: "gestureData", gestureData: categoryName });
       } else {
         console.warn("No data connection available or connection is closed.");
       }
@@ -145,16 +150,53 @@ const Video = () => {
     [dataConnection]
   );
 
+  useEffect(() => {
+    if (dataConnection) {
+      dataConnection.on("data", (data) => {
+        console.log("Received data:", data);
+
+        if (data.type === "startCountdown") {
+          setRemoteCountdownStarted(true);
+
+          // Start the countdown logic for the remote peer
+          setIsCountdownActive(true);
+          setCountdown(3);
+          const countdownInterval = setInterval(() => {
+            setCountdown((prev) => {
+              if (prev === 1) {
+                clearInterval(countdownInterval);
+                setIsCountdownActive(false);
+                setRemoteCountdownStarted(false);
+                sendGestureData(gestureData);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        } else if (data.type === "gestureData") {
+          setRemoteData(data.gestureData);
+        }
+      });
+    }
+  }, [dataConnection]);
+
   const handleCountdownButtonClick = () => {
     setIsCountdownActive(true);
     setCountdown(3);
+    setCountdownStarted(true);
+
+    // Notify the remote peer to start the countdown
+    if (dataConnection && dataConnection.open) {
+      dataConnection.send({ type: "startCountdown" });
+    }
 
     const countdownInterval = setInterval(() => {
       setCountdown((prev) => {
         if (prev === 1) {
           clearInterval(countdownInterval);
           setIsCountdownActive(false);
-          sendGestureData(gestureData); // Send the gesture data after countdown
+          setCountdownStarted(false);
+          sendGestureData(gestureData); // Send gesture data after countdown
           return 0;
         }
         return prev - 1;
@@ -208,7 +250,10 @@ const Video = () => {
                   const handedness = results.handednesses[0][0].displayName;
                   gestureOutput.innerText = `Gesture: ${categoryName}\nConfidence: ${categoryScore}%\nHandedness: ${handedness}`;
                   gestureOutput.style.display = "block";
-
+                  // console.log(
+                  //   "setting up the gesture data right now",
+                  //   gestureData
+                  // );
                   setGestureData(categoryName); // Update gestureData state
                 } else {
                   gestureOutput.style.display = "none";
@@ -220,14 +265,17 @@ const Video = () => {
           }
           requestAnimationFrame(predict);
         } else {
-          console.warn("Video dimensions are not valid.");
           requestAnimationFrame(predict);
         }
       };
 
       predict();
+
+      return () => {
+        cancelAnimationFrame(predict); // Clean up on unmount
+      };
     }
-  }, [gestureRecognizer, sendGestureData]);
+  }, [gestureRecognizer, countdownStarted, remoteCountdownStarted]);
 
   useEffect(() => {
     if (gestureData && remoteData) {
