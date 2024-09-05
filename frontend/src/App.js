@@ -5,7 +5,7 @@ import Video from "./Video";
 const App = () => {
   return (
     <div className="App">
-      <Chat />
+      {/* <Chat /> */}
       <Video />
     </div>
   );
