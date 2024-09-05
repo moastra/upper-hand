@@ -4,8 +4,10 @@ import "./Video.css";
 import useGestureRecognition from "./hooks/useGestureRecognition";
 import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
-import usePeerJS from "./hooks/usePeerJS";
-
+// import usePeerJS from "./hooks/usePeerJS";
+import rock from "./image/rock.png";
+import paper from "./image/paper.png";
+import scissors from "./image/scissors.png";
 const Video = () => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -20,6 +22,8 @@ const Video = () => {
   const [gameResult, setGameResult] = useState(""); // State to store the game result
   const [countdownStarted, setCountdownStarted] = useState(false);
   const [remoteCountdownStarted, setRemoteCountdownStarted] = useState(false);
+  const [localImage, setLocalImage] = useState("");
+  const [remoteImage, setremoteImage] = useState("");
   const gestureDataRef = useRef(""); // Use a ref to store the gesture data
   const { gestureData, isLoading } = useGestureRecognition(
     localVideoRef,
@@ -134,9 +138,17 @@ const Video = () => {
 
   useEffect(() => {
     if (gestureData && remoteData) {
-      const localChoice = gestureToChoice[gestureData] || "Invalid";
-      const remoteChoice = gestureToChoice[remoteData] || "Invalid";
-      const result = determineWinner(localChoice, remoteChoice);
+      const local = gestureToChoice[gestureData] || {
+        choice: "Invalid",
+        image: null,
+      };
+      setLocalImage(local.image);
+      const remote = gestureToChoice[remoteData] || {
+        choice: "Invalid",
+        image: null,
+      };
+      setremoteImage(remote.image);
+      const result = determineWinner(local.choice, remote.choice);
       setGameResult(result);
     }
   }, [gestureData, remoteData]);
@@ -148,7 +160,9 @@ const Video = () => {
           <video ref={localVideoRef} autoPlay muted />
         </div>
         <div className="result-box">
+          <img src={localImage} width="80" height="80" />
           <p>{gameResult}</p>
+          <img src={remoteImage} width="80" height="80" />
         </div>
         <div className="video-bottom">
           <video
