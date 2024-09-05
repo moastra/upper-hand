@@ -29,27 +29,7 @@ const determineWinner = (localChoice, remoteChoice) => {
   }
 };
 
-const gestureToChoice = {
-  Closed_Fist: "Rock",
-  Open_Palm: "Paper",
-  Victory: "Scissors",
-};
 
-const determineWinner = (localChoice, remoteChoice) => {
-  if (localChoice === remoteChoice) {
-    return "Draw";
-  }
-  switch (localChoice) {
-    case "Rock":
-      return remoteChoice === "Scissors" ? "Win" : "Lose";
-    case "Paper":
-      return remoteChoice === "Rock" ? "Win" : "Lose";
-    case "Scissors":
-      return remoteChoice === "Paper" ? "Win" : "Lose";
-    default:
-      return "Invalid";
-  }
-};
 
 const Video = () => {
   const [peerId, setPeerId] = useState("");
