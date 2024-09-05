@@ -7,7 +7,7 @@ import useCountdown from "./hooks/useCountdown";
 import usePeerJS from "./hooks/usePeerJS";
 
 const Video = () => {
-  // const [peerId, setPeerId] = useState("");
+  const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
   const [connected, setConnected] = useState(false);
   const [isCountdownActive, setIsCountdownActive] = useState(false);
@@ -15,7 +15,7 @@ const Video = () => {
   const remoteVideoRef = useRef(null);
   const peerInstance = useRef(null);
   const canvasRef = useRef(null);
-  // const [dataConnection, setDataConnection] = useState(null);
+  const [dataConnection, setDataConnection] = useState(null);
   const [remoteData, setRemoteData] = useState("");
   const [gameResult, setGameResult] = useState(""); // State to store the game result
   const [countdownStarted, setCountdownStarted] = useState(false);
@@ -25,118 +25,81 @@ const Video = () => {
     localVideoRef,
     canvasRef
   );
-  // useEffect(() => {
-  //   // Initialize PeerJS
-  //   peerInstance.current = new Peer();
+  useEffect(() => {
+    // Initialize PeerJS
+    peerInstance.current = new Peer();
 
-  //   peerInstance.current.on("open", (id) => {
-  //     setPeerId(id);
-  //   });
+    peerInstance.current.on("open", (id) => {
+      setPeerId(id);
+    });
 
-  //   peerInstance.current.on("connection", (conn) => {
-  //     setDataConnection(conn);
-  //     //
-  //     conn.on("data", (data) => {
-  //       if (data.type === "startCountdown") {
-  //         setRemoteCountdownStarted(true);
-  //         setIsCountdownActive(true);
-  //       } else if (data.type === "gestureData") {
-  //         setRemoteData(data.gestureData);
-  //       }
-  //     });
+    peerInstance.current.on("connection", (conn) => {
+      setDataConnection(conn);
+      //
+      conn.on("data", (data) => {
+        if (data.type === "startCountdown") {
+          setRemoteCountdownStarted(true);
+          setIsCountdownActive(true);
+        } else if (data.type === "gestureData") {
+          setRemoteData(data.gestureData);
+        }
+      });
 
-  //     conn.on("error", (err) => {
-  //       console.error("Connection error:", err);
-  //     });
-  //   });
+      conn.on("error", (err) => {
+        console.error("Connection error:", err);
+      });
+    });
 
-  //   peerInstance.current.on("call", (call) => {
-  //     navigator.mediaDevices
-  //       .getUserMedia({ video: true, audio: false })
-  //       .then((stream) => {
-  //         localVideoRef.current.srcObject = stream;
-  //         call.answer(stream); // Answer the call with your own video stream
+    peerInstance.current.on("call", (call) => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          localVideoRef.current.srcObject = stream;
+          call.answer(stream); // Answer the call with your own video stream
 
-  //         call.on("stream", (remoteStream) => {
-  //           remoteVideoRef.current.srcObject = remoteStream;
-  //         });
-  //       });
-  //   });
-  //   return () => {
-  //     peerInstance.current.disconnect();
-  //     peerInstance.current.destroy();
-  //   };
-  // }, []);
-  const onConnection = (data) => {
-    if (data.type === "startCountdown") {
-      setRemoteCountdownStarted(true);
-      setIsCountdownActive(true);
-    } else if (data.type === "gestureData") {
-      setRemoteData(data.gestureData);
-    }
-  };
-  const onCall = (call) => {
+          call.on("stream", (remoteStream) => {
+            remoteVideoRef.current.srcObject = remoteStream;
+          });
+        });
+    });
+    return () => {
+      peerInstance.current.disconnect();
+      peerInstance.current.destroy();
+    };
+  }, []);
+
+  const callPeer = (id) => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
         localVideoRef.current.srcObject = stream;
-        call.answer(stream);
+
+        const call = peerInstance.current.call(id, stream);
         call.on("stream", (remoteStream) => {
           remoteVideoRef.current.srcObject = remoteStream;
         });
-      })
-      .catch((err) => {
-        console.error("Media access error:", err);
-        alert("Could not access camera. Please check your permissions.");
-      });
-  };
-  const { peerId, callPeer, connectPeer, dataConnection } = usePeerJS(
-    onConnection,
-    onCall
-  );
 
-  useEffect(() => {
-    if (dataConnection) {
-      dataConnection.on("open", () => {
+        const conn = peerInstance.current.connect(id);
+        conn.on("open", () => {
+          setDataConnection(conn);
+          console.log("Data connection established");
+        });
+        conn.on("data", (data) => {
+          console.log("Received gesture data:", data);
+          setRemoteData(data.gestureData); // Update state with received gesture from host
+        });
+        conn.on("error", (err) => {
+          console.error("Connection error:", err);
+        });
+
+        conn.on("close", () => {
+          console.log("Data connection closed");
+          setDataConnection(null);
+        });
+
         setConnected(true);
       });
-      dataConnection.on("close", () => {
-        setConnected(false);
-      });
-    }
-  }, [dataConnection]);
-  // const callPeer = (id) => {
-  //   navigator.mediaDevices
-  //     .getUserMedia({ video: true, audio: false })
-  //     .then((stream) => {
-  //       localVideoRef.current.srcObject = stream;
-
-  //       const call = peerInstance.current.call(id, stream);
-  //       call.on("stream", (remoteStream) => {
-  //         remoteVideoRef.current.srcObject = remoteStream;
-  //       });
-
-  //       const conn = peerInstance.current.connect(id);
-  //       conn.on("open", () => {
-  //         setDataConnection(conn);
-  //         console.log("Data connection established");
-  //       });
-  //       conn.on("data", (data) => {
-  //         console.log("Received gesture data:", data);
-  //         setRemoteData(data.gestureData); // Update state with received gesture from host
-  //       });
-  //       conn.on("error", (err) => {
-  //         console.error("Connection error:", err);
-  //       });
-
-  //       conn.on("close", () => {
-  //         console.log("Data connection closed");
-  //         setDataConnection(null);
-  //       });
-
-  //       setConnected(true);
-  //     });
-  // };
+  };
 
   const sendGestureData = useCallback(
     (categoryName) => {
@@ -188,7 +151,11 @@ const Video = () => {
           <p>{gameResult}</p>
         </div>
         <div className="video-bottom">
-          <video ref={remoteVideoRef} autoPlay />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            className={isCountdownActive ? "video-hidden" : ""}
+          />
         </div>
         <div className="canvas-container">
           <canvas ref={canvasRef} />

@@ -138,3 +138,7 @@
   font-size: 1.5rem;
   z-index: 5; /* Ensure result box is above videos */
 }
+
+.video-hidden {
+  display: none;
+}
