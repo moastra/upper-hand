@@ -142,3 +142,35 @@
 .video-hidden {
   display: none;
 }
+
+.table-container {
+  position: fixed;
+  top: 20%;
+  left: 0;
+  width: 300px;
+  border-collapse: collapse;
+  overflow-y: auto; /* Scroll if content overflows */
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  border-right: 2px solid #ddd; /* Light border for separation */
+  padding: 10px; /* Padding inside the container */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a lifted effect */
+  z-index: 2; /* Ensure it’s above other elements but below the result box */
+}
+
+.table-container table {
+  width: 100%; /* Full width of the container */
+  border-collapse: collapse; /* Collapse borders for better appearance */
+}
+
+.table-container th,
+.table-container td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.table-container .title {
+  color: #000000;
+  text-align: center;
+  background-color: #525050;
+}

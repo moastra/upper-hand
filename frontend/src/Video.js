@@ -4,10 +4,7 @@ import "./Video.css";
 import useGestureRecognition from "./hooks/useGestureRecognition";
 import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
-// import usePeerJS from "./hooks/usePeerJS";
-import rock from "./image/rock.png";
-import paper from "./image/paper.png";
-import scissors from "./image/scissors.png";
+
 const Video = () => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -19,7 +16,7 @@ const Video = () => {
   const canvasRef = useRef(null);
   const [dataConnection, setDataConnection] = useState(null);
   const [remoteData, setRemoteData] = useState("");
-  const [gameResult, setGameResult] = useState(""); // State to store the game result
+  const [gameResult, setGameResult] = useState([]); // State to store the game result
   const [countdownStarted, setCountdownStarted] = useState(false);
   const [remoteCountdownStarted, setRemoteCountdownStarted] = useState(false);
   const [localImage, setLocalImage] = useState("");
@@ -149,21 +146,35 @@ const Video = () => {
       };
       setremoteImage(remote.image);
       const result = determineWinner(local.choice, remote.choice);
-      setGameResult(result);
+      //store the results in a array
+      setGameResult((prevResults) => [
+        ...prevResults,
+        {
+          round: prevResults.length + 1,
+          local: local.choice,
+          remote: remote.choice,
+          result,
+        },
+      ]);
+      console.log(gameResult);
     }
-  }, [gestureData, remoteData]);
-
+  }, [remoteData]);
+  const lastResult =
+    gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
   return (
     <div className="container">
       <div className="video-sections">
         <div className="video-top">
           <video ref={localVideoRef} autoPlay muted />
         </div>
-        <div className="result-box">
-          <img src={localImage} width="80" height="80" />
-          <p>{gameResult}</p>
-          <img src={remoteImage} width="80" height="80" />
-        </div>
+        {lastResult && (
+          <div className="result-box">
+            <img src={localImage} width="80" height="80" />
+            <p>Round: {lastResult.round}</p>
+            <p>{lastResult.result}</p>
+            <img src={remoteImage} width="80" height="80" />
+          </div>
+        )}
         <div className="video-bottom">
           <video
             ref={remoteVideoRef}
@@ -195,6 +206,26 @@ const Video = () => {
         {isCountdownActive && <p>Sending in {countdownTime}...</p>}
       </div>
       <div id="gesture_output"></div>
+      <table className="table-container">
+        <thead className="title">
+          <tr>
+            <th>Round</th>
+            <th>Local Choice</th>
+            <th>Remote Choice</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gameResult.map((res) => (
+            <tr key={res.round}>
+              <td>{res.round}</td>
+              <td>{res.local}</td>
+              <td>{res.remote}</td>
+              <td>{res.result}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
