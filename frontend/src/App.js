@@ -14,14 +14,6 @@ import Login from "./components/Login";
 import ChatVideo from "./components/ChatVideoLayout";
 import Chat from "./components/ChatLayout";
 
-// const HomePage = (props) => {
-//   return (
-//     <>
-//       <Chat />
-//       <Video />
-//     </>
-//   );
-// };
 
 const App = () => {
   return (
