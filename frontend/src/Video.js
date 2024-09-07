@@ -18,14 +18,16 @@ const Video = () => {
   const [remoteData, setRemoteData] = useState("");
   const [gameResult, setGameResult] = useState([]); // State to store the game result
   const [countdownStarted, setCountdownStarted] = useState(false);
-  const [remoteCountdownStarted, setRemoteCountdownStarted] = useState(false);
   const [localImage, setLocalImage] = useState("");
+  const [rounds, setRounds] = useState(0);
   const [remoteImage, setremoteImage] = useState("");
+
   const gestureDataRef = useRef(""); // Use a ref to store the gesture data
   const { gestureData, isLoading } = useGestureRecognition(
     localVideoRef,
     canvasRef
   );
+
   useEffect(() => {
     // Initialize PeerJS
     peerInstance.current = new Peer();
@@ -36,13 +38,14 @@ const Video = () => {
 
     peerInstance.current.on("connection", (conn) => {
       setDataConnection(conn);
-      //
+
       conn.on("data", (data) => {
         if (data.type === "startCountdown") {
-          setRemoteCountdownStarted(true);
           setIsCountdownActive(true);
         } else if (data.type === "gestureData") {
           setRemoteData(data.gestureData);
+          console.log("line 46 recieved remote data:", data.gestureData);
+          setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
         }
       });
 
@@ -63,6 +66,7 @@ const Video = () => {
           });
         });
     });
+
     return () => {
       peerInstance.current.disconnect();
       peerInstance.current.destroy();
@@ -86,8 +90,9 @@ const Video = () => {
           console.log("Data connection established");
         });
         conn.on("data", (data) => {
-          console.log("Received gesture data:", data);
           setRemoteData(data.gestureData); // Update state with received gesture from host
+          console.log("line 92 set remote gesture data:", data.gestureData);
+          setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
         });
         conn.on("error", (err) => {
           console.error("Connection error:", err);
@@ -101,7 +106,7 @@ const Video = () => {
         setConnected(true);
       });
   };
-
+  //this get's called thrid
   const sendGestureData = useCallback(
     (categoryName) => {
       if (dataConnection && dataConnection.open) {
@@ -117,13 +122,14 @@ const Video = () => {
   useEffect(() => {
     gestureDataRef.current = gestureData;
   }, [gestureData]);
-
+  //this get's called second
   const countdownTime = useCountdown(isCountdownActive, () => {
     setIsCountdownActive(false);
     setCountdownStarted(false);
     sendGestureData(gestureDataRef.current);
   });
 
+  //handleCountdown button get's click first
   const handleCountdownButtonClick = () => {
     setIsCountdownActive(true);
     setCountdownStarted(true);
@@ -146,21 +152,22 @@ const Video = () => {
       };
       setremoteImage(remote.image);
       const result = determineWinner(local.choice, remote.choice);
-      //store the results in a array
+      // Store the results in an array
       setGameResult((prevResults) => [
         ...prevResults,
         {
-          round: prevResults.length + 1,
+          round: rounds,
           local: local.choice,
           remote: remote.choice,
           result,
         },
       ]);
-      console.log(gameResult);
     }
-  }, [remoteData]);
+  }, [remoteData, rounds]);
+
   const lastResult =
     gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
+
   return (
     <div className="container">
       <div className="video-sections">
@@ -169,10 +176,15 @@ const Video = () => {
         </div>
         {lastResult && (
           <div className="result-box">
-            <img src={localImage} width="80" height="80" />
+            <img src={localImage} width="80" height="80" alt="Local Gesture" />
             <p>Round: {lastResult.round}</p>
             <p>{lastResult.result}</p>
-            <img src={remoteImage} width="80" height="80" />
+            <img
+              src={remoteImage}
+              width="80"
+              height="80"
+              alt="Remote Gesture"
+            />
           </div>
         )}
         <div className="video-bottom">
