@@ -5,7 +5,7 @@ import useGestureRecognition from "./hooks/useGestureRecognition";
 import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 
-const Video = () => {
+const Video = ({ onGameResult }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
   const [connected, setConnected] = useState(false);
@@ -168,6 +168,7 @@ const Video = () => {
   const lastResult =
     gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
 
+  onGameResult(lastResult);
   return (
     <div className="container">
       <div className="video-sections">
