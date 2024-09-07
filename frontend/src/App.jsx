@@ -13,6 +13,8 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import ChatVideo from "./components/ChatVideoLayout";
 import Chat from "./components/ChatLayout";
+import Home from "./components/notLoggedInHome";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 
 const App = () => {
@@ -22,7 +24,14 @@ const App = () => {
         <Nav />
 
         <Routes>
+          <Route path="/" element={<Home />} />
+
+
+          {/* Makes it so that user needs to be logged in to access dashboard. */}
+          {/* <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
           <Route path="/dashboard" element={<Dashboard />} />
+
+
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/settings" element={<Settings />} />

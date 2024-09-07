@@ -14,9 +14,13 @@ function Login () {
     try {
       const response = await axios.post('/api/login', { email, password });
 
-      if (response.status === 200) {
+      // if (response.status === 200) {
+
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('username', response.data.username);  //Storing jwt token and username.
+
         navigate('/dashboard');
-      }
+      // }
     } catch (error) {
       setError('Invalid email or password'); 
     }
