@@ -174,3 +174,20 @@
   text-align: center;
   background-color: #525050;
 }
+
+.hp-bar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+.video-top .hp-bar {
+  top: 10px;
+}
+.video-bottom .hp-bar {
+  bottom: 10px;
+}

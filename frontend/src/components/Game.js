@@ -1,52 +1,58 @@
 import React, { useEffect, useState } from "react";
 import Player from "./Player";
+
 const initialPlayerState = {
   name: "Player 1",
   hp: 100,
   attack: 20,
   defense: 10,
-  choice: null, // Added choice field
 };
 
-const Game = ({ initialGameResult }) => {
-  console.log("Initial Game Result received:", initialGameResult);
+const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
   const [player1, setPlayer1] = useState(initialPlayerState);
   const [player2, setPlayer2] = useState({
     ...initialPlayerState,
     name: "Player 2",
   });
-  const [roundResult, setRoundResult] = useState(null);
 
+  // Effect to handle game result and update players' HP
   useEffect(() => {
     if (initialGameResult) {
       const { local, remote, result } = initialGameResult;
-      if (result === "Win") {
-        // Player 1 wins, decrease Player 2's HP
-        setPlayer2((prev) => ({
-          ...prev,
-          hp: Math.max(prev.hp - player1.attack, 0),
-        }));
-      } else if (result === "Lose") {
-        // Player 2 wins, decrease Player 1's HP
-        setPlayer1((prev) => ({
-          ...prev,
-          hp: Math.max(prev.hp - player2.attack, 0),
-        }));
-      }
-      setPlayer1((prev) => ({ ...prev, choice: null }));
-      setPlayer2((prev) => ({ ...prev, choice: null }));
-      setRoundResult(result);
-    } else {
-      setRoundResult("Both players need to make a choice.");
-      return;
+
+      // Use functional state updates to ensure accurate state changes
+      setPlayer2((prev) => {
+        const newHp =
+          result === "Win"
+            ? Math.max(prev.hp - (player1.attack - player2.defense), 0)
+            : prev.hp;
+
+        return { ...prev, hp: newHp };
+      });
+
+      setPlayer1((prev) => {
+        const newHp =
+          result === "Lose"
+            ? Math.max(prev.hp - (player2.attack - player1.defense), 0)
+            : prev.hp;
+
+        return { ...prev, hp: newHp };
+      });
     }
   }, [initialGameResult]);
+
+  // Effect to notify parent component of updated player stats
+  useEffect(() => {
+    onPlayerStatsUpdate({
+      player1: { ...player1 },
+      player2: { ...player2 },
+    });
+  }, [player1.hp, player2.hp, onPlayerStatsUpdate]);
 
   return (
     <div>
       <Player player={player1} />
       <Player player={player2} />
-      {roundResult && <p>Round Result: {roundResult}</p>}
     </div>
   );
 };

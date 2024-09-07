@@ -5,7 +5,7 @@ import useGestureRecognition from "./hooks/useGestureRecognition";
 import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 
-const Video = ({ onGameResult }) => {
+const Video = ({ onGameResult, playerStats }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
   const [connected, setConnected] = useState(false);
@@ -21,12 +21,22 @@ const Video = ({ onGameResult }) => {
   const [localImage, setLocalImage] = useState("");
   const [rounds, setRounds] = useState(0);
   const [remoteImage, setremoteImage] = useState("");
+  const [player1HP, setPlayer1HP] = useState(100);
+  const [player2HP, setPlayer2HP] = useState(100);
 
   const gestureDataRef = useRef(""); // Use a ref to store the gesture data
   const { gestureData, isLoading } = useGestureRecognition(
     localVideoRef,
     canvasRef
   );
+  // Update HP from playerStats
+  useEffect(() => {
+    console.log("Received playerStats:", playerStats);
+    if (playerStats.player1 && playerStats.player2) {
+      setPlayer1HP(playerStats.player1.hp);
+      setPlayer2HP(playerStats.player2.hp);
+    }
+  }, [playerStats]);
 
   useEffect(() => {
     // Initialize PeerJS
@@ -156,7 +166,7 @@ const Video = ({ onGameResult }) => {
       setGameResult((prevResults) => [
         ...prevResults,
         {
-          round: rounds,
+          round: prevResults.length + 1,
           local: local.choice,
           remote: remote.choice,
           result,
@@ -174,6 +184,7 @@ const Video = ({ onGameResult }) => {
       <div className="video-sections">
         <div className="video-top">
           <video ref={localVideoRef} autoPlay muted />
+          <div className="hp-bar local">Player 1 HP: {player1HP}</div>
         </div>
         {lastResult && (
           <div className="result-box">
@@ -194,6 +205,7 @@ const Video = ({ onGameResult }) => {
             autoPlay
             className={isCountdownActive ? "video-hidden" : ""}
           />
+          <div className="hp-bar remote">Player 2 HP: {player2HP}</div>
         </div>
         <div className="canvas-container">
           <canvas ref={canvasRef} />
