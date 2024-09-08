@@ -5,7 +5,7 @@ import gestureToChoice, { determineWinner } from './utility/determinwinner';
 import useCountdown from './hooks/useCountdown';
 import { createPeer, getPeerId } from './peerHelper';
 
-const VideoChat = () => {
+const VideoChat = ({ onGameResult, playerStats }) => {
   const [peerId, setPeerId] = useState('');
   const [remotePeerId, setRemotePeerId] = useState('');
   const [connected, setConnected] = useState(false);
@@ -28,6 +28,20 @@ const VideoChat = () => {
   const connInstance = useRef(null); // Connection for chat messages
   const gestureDataRef = useRef(''); // Use a ref to store the gesture data
   const { gestureData, isLoading } = useGestureRecognition(localVideoRef, canvasRef);
+  
+  const [player1HP, setPlayer1HP] = useState(100);
+  const [player2HP, setPlayer2HP] = useState(100);
+
+  // Update HP from playerStats
+  useEffect(() => {
+    if (playerStats.player1 && playerStats.player2) {
+      setPlayer1HP(playerStats.player1.hp);
+      setPlayer2HP(playerStats.player2.hp);
+    }
+  }, [playerStats]);
+
+  const player1Percentage = (player1HP / 300) * 100; // change to max hp depend on player later
+  const player2Percentage = (player2HP / 300) * 100; // change to max hp depend on player later
 
   // Fetch the peer ID using the helper function and initialize Peer instance
   useEffect(() => {
@@ -186,6 +200,11 @@ const VideoChat = () => {
 
   const lastResult =
     gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
+  useEffect(() => {
+    if (gameResult) {
+      onGameResult(gameResult);
+    }
+  }, [gameResult, onGameResult]);
 
   // Function to handle Enter key press
   const handleKeyDown = (e) => {
@@ -205,13 +224,24 @@ const VideoChat = () => {
       <div className="video-sections">
         <div className="video-top">
           <video ref={localVideoRef} autoPlay muted />
+          <div
+            className="hp-bar local"
+            style={{ width: `${player1Percentage}%` }}
+          >
+            Player 1 HP: {player1HP}
+          </div>
         </div>
         {lastResult && (
           <div className="result-box">
-            <img src={localImage} width="80" height="80" />
+            <img src={localImage} width="80" height="80" alt="Local Gesture" />
             <p>Round: {lastResult.round}</p>
             <p>{lastResult.result}</p>
-            <img src={remoteImage} width="80" height="80" />
+            <img
+              src={remoteImage}
+              width="80"
+              height="80"
+              alt="Remote Gesture"
+            />
           </div>
         )}
         <div className="video-bottom">
@@ -220,6 +250,12 @@ const VideoChat = () => {
             autoPlay
             className={isCountdownActive ? "video-hidden" : ""}
           />
+          <div
+            className="hp-bar remote"
+            style={{ width: `${player2Percentage}%` }}
+          >
+            Player 2 HP: {player2HP}
+          </div>
         </div>
         <div className="canvas-container">
           <canvas ref={canvasRef} />

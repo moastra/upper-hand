@@ -248,3 +248,23 @@
   border: 1px solid #ddd;
   margin-bottom: 10px;
 }
+
+.hp-bar {
+  position: absolute;
+  width: 100%; /* Full width of the parent container */
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  padding: 5px;
+  box-sizing: border-box; /* Include padding in width calculation */
+  overflow: hidden; /* Ensure text stays within the bar */
+}
+.hp-bar.local {
+  top: 10px;
+  background-color: green;
+}
+.hp-bar.remote {
+  background-color: blue;
+  bottom: 10px;
+}
