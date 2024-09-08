@@ -1,0 +1,21 @@
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Adjust based amnt columns needed */
+  gap: 10px;
+}
+
+.avatar-item {
+  cursor: pointer;
+  padding: 5px;
+  border: 2px solid transparent;
+  transition: border 0.3s;
+}
+
+.avatar-item img {
+  width: 100px;
+  height: 100px;
+}
+
+.avatar-item.selected {
+  border: 2px solid blue;
+}

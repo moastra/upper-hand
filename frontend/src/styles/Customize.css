@@ -1,0 +1,52 @@
+.customize-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white; /* Assuming a dark background */
+}
+
+.skill-points {
+  margin-top: 10px;
+  color: yellow;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.item-section, .stats-section, .storage-section {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.equipped-item img {
+  width: 150px;
+  height: 150px;
+}
+
+.stats-section table {
+  margin-top: 10px;
+  width: 300px;
+}
+
+.stats-section td {
+  padding: 10px;
+  text-align: center;
+}
+
+.storage-section table {
+  margin-top: 10px;
+}
+
+.storage-section td {
+  padding: 10px;
+}
+
+.storage-item {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.storage-item:hover {
+  transform: scale(1.1);
+}
