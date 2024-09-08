@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+// const socket = io('http://localhost:3001');
 
-const Chat = () => {
+const LobbyChat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState();
 
   useEffect(() => {
+    const socket = io();
+    setSocket(socket);
     socket.on('chatMessage', (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
@@ -47,7 +50,7 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default LobbyChat;
 
 
 // import React, { useState, useEffect } from 'react';
