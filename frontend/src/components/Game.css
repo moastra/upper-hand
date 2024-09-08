@@ -1,0 +1,10 @@
+.popup {
+  position: fixed;
+  top: 10px; /* Adjust the distance from the top */
+  left: 10px; /* Adjust the distance from the left */
+  background: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow for better visibility */
+}

@@ -1,76 +1,290 @@
-import {
-  GestureRecognizer,
-  FilesetResolver,
-  DrawingUtils,
-} from "@mediapipe/tasks-vision";
+// import React, { useEffect, useRef, useState, useCallback } from "react";
+// import "./Video.css";
+// import useGestureRecognition from "./hooks/useGestureRecognition";
+// import gestureToChoice, { determineWinner } from "./utility/determinwinner";
+// import useCountdown from "./hooks/useCountdown";
+
+// // Import the helper functions
+// import { createPeer, getPeerId } from './peerHelper';
+
+// const Video = () => {
+//   const [peerId, setPeerId] = useState("");
+//   const [remotePeerId, setRemotePeerId] = useState("");
+//   const [connected, setConnected] = useState(false);
+//   const [isCountdownActive, setIsCountdownActive] = useState(false);
+//   const localVideoRef = useRef(null);
+//   const remoteVideoRef = useRef(null);
+//   const peerInstance = useRef(null);  // Hold the peer instance
+//   const canvasRef = useRef(null);
+//   const [dataConnection, setDataConnection] = useState(null);
+//   const [remoteData, setRemoteData] = useState("");
+//   const [gameResult, setGameResult] = useState([]); // State to store the game result
+//   const [countdownStarted, setCountdownStarted] = useState(false);
+//   const [remoteCountdownStarted, setRemoteCountdownStarted] = useState(false);
+//   const [localImage, setLocalImage] = useState("");
+//   const [remoteImage, setremoteImage] = useState("");
+//   const gestureDataRef = useRef(""); // Use a ref to store the gesture data
+//   const { gestureData, isLoading } = useGestureRecognition(
+//     localVideoRef,
+//     canvasRef
+//   );
+
+//   useEffect(() => {
+//     // Create a new peer instance
+//     peerInstance.current = createPeer();
+
+//     // Fetch peer ID using helper function
+//     getPeerId((id) => {
+//       setPeerId(id);  // Set the peerId in state
+//     });
+
+//     peerInstance.current.on("connection", (conn) => {
+//       setDataConnection(conn);
+
+//       conn.on("data", (data) => {
+//         if (data.type === "startCountdown") {
+//           setRemoteCountdownStarted(true);
+//           setIsCountdownActive(true);
+//         } else if (data.type === "gestureData") {
+//           setRemoteData(data.gestureData);
+//         }
+//       });
+
+//       conn.on("error", (err) => {
+//         console.error("Connection error:", err);
+//       });
+//     });
+
+//     peerInstance.current.on("call", (call) => {
+//       navigator.mediaDevices
+//         .getUserMedia({ video: true, audio: false })
+//         .then((stream) => {
+//           localVideoRef.current.srcObject = stream;
+//           call.answer(stream); // Answer the call with your own video stream
+
+//           call.on("stream", (remoteStream) => {
+//             remoteVideoRef.current.srcObject = remoteStream;
+//           });
+//         });
+//     });
+
+//     return () => {
+//       peerInstance.current.disconnect();
+//       peerInstance.current.destroy();
+//     };
+//   }, []);
+
+//   const callPeer = (id) => {
+//     navigator.mediaDevices
+//       .getUserMedia({ video: true, audio: false })
+//       .then((stream) => {
+//         localVideoRef.current.srcObject = stream;
+
+//         const call = peerInstance.current.call(id, stream);
+//         call.on("stream", (remoteStream) => {
+//           remoteVideoRef.current.srcObject = remoteStream;
+//         });
+
+//         const conn = peerInstance.current.connect(id);
+//         conn.on("open", () => {
+//           setDataConnection(conn);
+//           console.log("Data connection established");
+//         });
+//         conn.on("data", (data) => {
+//           console.log("Received gesture data:", data);
+//           setRemoteData(data.gestureData); // Update state with received gesture from host
+//         });
+//         conn.on("error", (err) => {
+//           console.error("Connection error:", err);
+//         });
+
+//         conn.on("close", () => {
+//           console.log("Data connection closed");
+//           setDataConnection(null);
+//         });
+
+//         setConnected(true);
+//       });
+//   };
+
+//   const sendGestureData = useCallback(
+//     (categoryName) => {
+//       if (dataConnection && dataConnection.open) {
+//         console.log("Sending gesture data:", categoryName);
+//         dataConnection.send({ type: "gestureData", gestureData: categoryName });
+//       } else {
+//         console.warn("No data connection available or connection is closed.");
+//       }
+//     },
+//     [dataConnection]
+//   );
+
+//   useEffect(() => {
+//     gestureDataRef.current = gestureData;
+//   }, [gestureData]);
+
+//   const countdownTime = useCountdown(isCountdownActive, () => {
+//     setIsCountdownActive(false);
+//     setCountdownStarted(false);
+//     sendGestureData(gestureDataRef.current);
+//   });
+
+//   const handleCountdownButtonClick = () => {
+//     setIsCountdownActive(true);
+//     setCountdownStarted(true);
+
+//     if (dataConnection && dataConnection.open) {
+//       dataConnection.send({ type: "startCountdown" });
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (gestureData && remoteData) {
+//       const local = gestureToChoice[gestureData] || {
+//         choice: "Invalid",
+//         image: null,
+//       };
+//       setLocalImage(local.image);
+//       const remote = gestureToChoice[remoteData] || {
+//         choice: "Invalid",
+//         image: null,
+//       };
+//       setremoteImage(remote.image);
+//       const result = determineWinner(local.choice, remote.choice);
+//       //store the results in a array
+//       setGameResult((prevResults) => [
+//         ...prevResults,
+//         {
+//           round: prevResults.length + 1,
+//           local: local.choice,
+//           remote: remote.choice,
+//           result,
+//         },
+//       ]);
+//       console.log(gameResult);
+//     }
+//   }, [remoteData]);
+
+//   const lastResult =
+//     gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
+
+//   return (
+//     <div className="container">
+//       <div className="video-sections">
+//         <div className="video-top">
+//           <video ref={localVideoRef} autoPlay muted />
+//         </div>
+//         {lastResult && (
+//           <div className="result-box">
+//             <img src={localImage} width="80" height="80" />
+//             <p>Round: {lastResult.round}</p>
+//             <p>{lastResult.result}</p>
+//             <img src={remoteImage} width="80" height="80" />
+//           </div>
+//         )}
+//         <div className="video-bottom">
+//           <video
+//             ref={remoteVideoRef}
+//             autoPlay
+//             className={isCountdownActive ? "video-hidden" : ""}
+//           />
+//         </div>
+//         <div className="canvas-container">
+//           <canvas ref={canvasRef} />
+//         </div>
+//       </div>
+//       <div className="controls">
+//         <h3>Your Peer ID: {peerId}</h3>
+//         <input
+//           type="text"
+//           placeholder="Remote Peer ID"
+//           value={remotePeerId}
+//           onChange={(e) => setRemotePeerId(e.target.value)}
+//         />
+//         <button onClick={() => callPeer(remotePeerId)} disabled={connected}>
+//           Connect
+//         </button>
+//         <button
+//           onClick={handleCountdownButtonClick}
+//           disabled={isCountdownActive}
+//         >
+//           Send Gesture Data (After 3 Sec)
+//         </button>
+//         {isCountdownActive && <p>Sending in {countdownTime}...</p>}
+//       </div>
+//       <div id="gesture_output"></div>
+//       <table className="table-container">
+//         <thead className="title">
+//           <tr>
+//             <th>Round</th>
+//             <th>Local Choice</th>
+//             <th>Remote Choice</th>
+//             <th>Result</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {gameResult.map((res) => (
+//             <tr key={res.round}>
+//               <td>{res.round}</td>
+//               <td>{res.local}</td>
+//               <td>{res.remote}</td>
+//               <td>{res.result}</td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// };
+
+// export default Video;
+
+
+
+
+
+// Original implementation
 import Peer from "peerjs";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import "./Video.css";
+import useGestureRecognition from "./hooks/useGestureRecognition";
+import gestureToChoice, { determineWinner } from "./utility/determinwinner";
+import useCountdown from "./hooks/useCountdown";
 
-const gestureToChoice = {
-  Closed_Fist: "Rock",
-  Open_Palm: "Paper",
-  Victory: "Scissors",
-};
-
-const determineWinner = (localChoice, remoteChoice) => {
-  if (localChoice === remoteChoice) {
-    return "Draw";
-  }
-  switch (localChoice) {
-    case "Rock":
-      return remoteChoice === "Scissors" ? "Win" : "Lose";  // To be changed to 1: win, 0: draw, -1: loss
-    case "Paper":
-      return remoteChoice === "Rock" ? "Win" : "Lose"; // To be changed to 1: win, 0: draw, -1: loss
-    case "Scissors":
-      return remoteChoice === "Paper" ? "Win" : "Lose"; // To be changed to 1: win, 0: draw, -1: loss
-    default:
-      return "Invalid";
-  }
-};
-
-
-
-const Video = () => {
+const Video = ({ onGameResult, playerStats }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
   const [connected, setConnected] = useState(false);
   const [isCountdownActive, setIsCountdownActive] = useState(false);
-  const [countdown, setCountdown] = useState(3);
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const peerInstance = useRef(null);
   const canvasRef = useRef(null);
-  const [gestureRecognizer, setGestureRecognizer] = useState(null);
   const [dataConnection, setDataConnection] = useState(null);
-  const [gestureData, setGestureData] = useState("");
   const [remoteData, setRemoteData] = useState("");
-  const [gameResult, setGameResult] = useState(""); // State to store the game result
+  const [gameResult, setGameResult] = useState([]); // State to store the game result
   const [countdownStarted, setCountdownStarted] = useState(false);
-  const [remoteCountdownStarted, setRemoteCountdownStarted] = useState(false);
+  const [localImage, setLocalImage] = useState("");
+  const [rounds, setRounds] = useState(0);
+  const [remoteImage, setremoteImage] = useState("");
+  const [player1HP, setPlayer1HP] = useState(100);
+  const [player2HP, setPlayer2HP] = useState(100);
 
-  // Load the hand gesture model
+  const gestureDataRef = useRef(""); // Use a ref to store the gesture data
+  const { gestureData, isLoading } = useGestureRecognition(
+    localVideoRef,
+    canvasRef
+  );
+  // Update HP from playerStats
   useEffect(() => {
-    const loadModel = async () => {
-      try {
-        const vision = await FilesetResolver.forVisionTasks(
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-        );
-        const recognizer = await GestureRecognizer.createFromOptions(vision, {
-          baseOptions: {
-            modelAssetPath:
-              "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
-            delegate: "GPU",
-          },
-          runningMode: "VIDEO",
-        });
-        setGestureRecognizer(recognizer);
-      } catch (error) {
-        console.error("Error loading gesture recognizer model:", error);
-      }
-    };
-    loadModel();
-  }, []);
+    if (playerStats.player1 && playerStats.player2) {
+      setPlayer1HP(playerStats.player1.hp);
+      setPlayer2HP(playerStats.player2.hp);
+    }
+  }, [playerStats]);
+
+  const player1Percentage = (player1HP / 300) * 100; // change to max hp depend on player later
+  const player2Percentage = (player2HP / 300) * 100; // change to max hp depend on player later
 
   useEffect(() => {
     // Initialize PeerJS
@@ -82,10 +296,15 @@ const Video = () => {
 
     peerInstance.current.on("connection", (conn) => {
       setDataConnection(conn);
-      //
+
       conn.on("data", (data) => {
-        console.log("Received gesture data:", data.gestureData);
-        setRemoteData(data.gestureData); // Update state with received gesture from connector
+        if (data.type === "startCountdown") {
+          setIsCountdownActive(true);
+        } else if (data.type === "gestureData") {
+          setRemoteData(data.gestureData);
+          console.log("line 46 recieved remote data:", data.gestureData);
+          setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
+        }
       });
 
       conn.on("error", (err) => {
@@ -105,6 +324,11 @@ const Video = () => {
           });
         });
     });
+
+    return () => {
+      peerInstance.current.disconnect();
+      peerInstance.current.destroy();
+    };
   }, []);
 
   const callPeer = (id) => {
@@ -124,8 +348,9 @@ const Video = () => {
           console.log("Data connection established");
         });
         conn.on("data", (data) => {
-          console.log("Received gesture data:", data);
           setRemoteData(data.gestureData); // Update state with received gesture from host
+          console.log("line 92 set remote gesture data:", data.gestureData);
+          setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
         });
         conn.on("error", (err) => {
           console.error("Connection error:", err);
@@ -139,7 +364,7 @@ const Video = () => {
         setConnected(true);
       });
   };
-
+  //this get's called thrid
   const sendGestureData = useCallback(
     (categoryName) => {
       if (dataConnection && dataConnection.open) {
@@ -153,152 +378,94 @@ const Video = () => {
   );
 
   useEffect(() => {
-    if (dataConnection) {
-      dataConnection.on("data", (data) => {
-        console.log("Received data:", data);
+    gestureDataRef.current = gestureData;
+  }, [gestureData]);
+  //this get's called second
+  const countdownTime = useCountdown(isCountdownActive, () => {
+    setIsCountdownActive(false);
+    setCountdownStarted(false);
+    sendGestureData(gestureDataRef.current);
+  });
 
-        if (data.type === "startCountdown") {
-          setRemoteCountdownStarted(true);
-
-          // Start the countdown logic for the remote peer
-          setIsCountdownActive(true);
-          setCountdown(3);
-          const countdownInterval = setInterval(() => {
-            setCountdown((prev) => {
-              if (prev === 1) {
-                clearInterval(countdownInterval);
-                setIsCountdownActive(false);
-                setRemoteCountdownStarted(false);
-                sendGestureData(gestureData);
-                return 0;
-              }
-              return prev - 1;
-            });
-          }, 1000);
-        } else if (data.type === "gestureData") {
-          setRemoteData(data.gestureData);
-        }
-      });
-    }
-  }, [dataConnection]);
-
+  //handleCountdown button get's click first
   const handleCountdownButtonClick = () => {
     setIsCountdownActive(true);
-    setCountdown(3);
     setCountdownStarted(true);
 
-    // Notify the remote peer to start the countdown
     if (dataConnection && dataConnection.open) {
       dataConnection.send({ type: "startCountdown" });
     }
-
-    const countdownInterval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === 1) {
-          clearInterval(countdownInterval);
-          setIsCountdownActive(false);
-          setCountdownStarted(false);
-          sendGestureData(gestureData); // Send gesture data after countdown
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   useEffect(() => {
-    if (gestureRecognizer && localVideoRef.current) {
-      const video = localVideoRef.current;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      let lastVideoTime = -1;
-
-      const predict = async () => { // call when button clicked (enabled when all is loaded[cams, ai])
-        const nowInMs = Date.now();
-
-        if (video.videoWidth > 0 && video.videoHeight > 0) {
-          if (video.currentTime !== lastVideoTime) {
-            lastVideoTime = video.currentTime;
-            try {
-              const results = await gestureRecognizer.recognizeForVideo(
-                video,
-                nowInMs
-              );
-
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              const drawingUtils = new DrawingUtils(ctx);
-
-              if (results.landmarks) {
-                for (const landmarks of results.landmarks) {
-                  drawingUtils.drawConnectors(
-                    landmarks,
-                    GestureRecognizer.HAND_CONNECTIONS,
-                    { color: "#00FF00", lineWidth: 5 }
-                  );
-                  drawingUtils.drawLandmarks(landmarks, {
-                    color: "#FF0000",
-                    lineWidth: 2,
-                  });
-                }
-              }
-
-              const gestureOutput = document.getElementById("gesture_output");
-              if (gestureOutput) {
-                if (results.gestures.length > 0) {
-                  const categoryName = results.gestures[0][0].categoryName;
-                  const categoryScore = parseFloat(
-                    results.gestures[0][0].score * 100
-                  ).toFixed(2);
-                  const handedness = results.handednesses[0][0].displayName;
-                  gestureOutput.innerText = `Gesture: ${categoryName}\nConfidence: ${categoryScore}%\nHandedness: ${handedness}`;
-                  gestureOutput.style.display = "block";
-                  // console.log(
-                  //   "setting up the gesture data right now",
-                  //   gestureData
-                  // );
-                  setGestureData(categoryName); // Update gestureData state
-                } else {
-                  gestureOutput.style.display = "none";
-                }
-              }
-            } catch (error) {
-              console.error("Error recognizing gesture:", error);
-            }
-          }
-          requestAnimationFrame(predict);
-        } else {
-          requestAnimationFrame(predict);
-        }
-      };
-
-      predict();
-
-      return () => {
-        cancelAnimationFrame(predict); // Clean up on unmount
-      };
-    }
-  }, [gestureRecognizer, countdownStarted, remoteCountdownStarted]);
-
-  useEffect(() => {
     if (gestureData && remoteData) {
-      const localChoice = gestureToChoice[gestureData] || "Invalid";
-      const remoteChoice = gestureToChoice[remoteData] || "Invalid";
-      const result = determineWinner(localChoice, remoteChoice);
-      setGameResult(result);
+      const local = gestureToChoice[gestureData] || {
+        choice: "Invalid",
+        image: null,
+      };
+      setLocalImage(local.image);
+      const remote = gestureToChoice[remoteData] || {
+        choice: "Invalid",
+        image: null,
+      };
+      setremoteImage(remote.image);
+      const result = determineWinner(local.choice, remote.choice);
+      // Store the results in an array
+      setGameResult((prevResults) => [
+        ...prevResults,
+        {
+          round: prevResults.length + 1,
+          local: local.choice,
+          remote: remote.choice,
+          result,
+        },
+      ]);
     }
-  }, [gestureData, remoteData]);
-
+  }, [remoteData, rounds]);
+  const lastResult =
+    gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
+  useEffect(() => {
+    if (gameResult) {
+      onGameResult(gameResult);
+    }
+  }, [gameResult, onGameResult]);
   return (
     <div className="container">
       <div className="video-sections">
         <div className="video-top">
           <video ref={localVideoRef} autoPlay muted />
+          <div
+            className="hp-bar local"
+            style={{ width: `${player1Percentage}%` }}
+          >
+            Player 1 HP: {player1HP}
+          </div>
         </div>
-        <div className="result-box">
-          <p>{gameResult}</p>
-        </div>
+        {lastResult && (
+          <div className="result-box">
+            <img src={localImage} width="80" height="80" alt="Local Gesture" />
+            <p>Round: {lastResult.round}</p>
+            <p>{lastResult.result}</p>
+            <img
+              src={remoteImage}
+              width="80"
+              height="80"
+              alt="Remote Gesture"
+            />
+          </div>
+        )}
         <div className="video-bottom">
-          <video ref={remoteVideoRef} autoPlay />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            className={isCountdownActive ? "video-hidden" : ""}
+          />
+          <div
+            className="hp-bar remote"
+            style={{ width: `${player2Percentage}%` }}
+          >
+            Player 2 HP: {player2HP}
+          </div>
         </div>
         <div className="canvas-container">
           <canvas ref={canvasRef} />
@@ -321,9 +488,29 @@ const Video = () => {
         >
           Send Gesture Data (After 3 Sec)
         </button>
-        {isCountdownActive && <p>Sending in {countdown}...</p>}
+        {isCountdownActive && <p>Sending in {countdownTime}...</p>}
       </div>
       <div id="gesture_output"></div>
+      <table className="table-container">
+        <thead className="title">
+          <tr>
+            <th>Round</th>
+            <th>Local Choice</th>
+            <th>Remote Choice</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gameResult.map((res) => (
+            <tr key={res.round}>
+              <td>{res.round}</td>
+              <td>{res.local}</td>
+              <td>{res.remote}</td>
+              <td>{res.result}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
