@@ -2,11 +2,13 @@ import React, { useEffect, useState, useCallback } from "react";
 import Player from "./Player";
 import { checkPatterns } from "../utility/roundpattern";
 import "./Game.css";
+import { updatePlayerHP } from "../utility/updatePlayerHp";
 const initialPlayerState = {
   name: "Player 1",
   hp: 300,
   attack: 10,
   defense: 5,
+  multiplier: 1,
 };
 
 const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
@@ -83,6 +85,7 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
       console.log("Last Result:", lastResult);
       console.log("Player 1 Attack:", player1.attack);
       console.log("Player 2 Defense:", player2.defense);
+      console.log("player 1 muti:", player1.multiplier);
       console.log("Player 2 HP before:", player2.hp);
       console.log("Damage Calculation:", player1.attack - player2.defense);
 
@@ -90,14 +93,24 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
         ...prev,
         hp:
           result === "Win"
-            ? Math.max(prev.hp - (player1.attack - player2.defense), 0)
+            ? updatePlayerHP(
+                prev.hp,
+                player1.attack,
+                player2.defense,
+                player1.multiplier
+              )
             : prev.hp,
       }));
       setPlayer1((prev) => ({
         ...prev,
         hp:
           result === "Lose"
-            ? Math.max(prev.hp - (player2.attack - player1.defense), 0)
+            ? updatePlayerHP(
+                prev.hp,
+                player1.attack,
+                player2.defense,
+                player1.multiplier
+              )
             : prev.hp,
       }));
       setProcessingComplete(false); // Reset the flag for future updates

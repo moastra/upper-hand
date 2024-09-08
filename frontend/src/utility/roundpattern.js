@@ -1,29 +1,48 @@
 export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
   const values = Object.values(counts);
-  const pair = values.includes(2);
   const threeOfAKind = values.includes(3);
   const fourOfAKind = values.includes(4);
   const fullHouse = values.includes(3) && values.includes(2);
-
-  // Initialize an empty set if not provided
+  const rockSolid = counts.Rock === 2; // Check if Rock was chosen 2 times
+  const secondWind = counts.Paper === 2;
+  const cuttingEdge = counts.Scissors === 2;
   appliedPatterns = appliedPatterns || new Set();
 
   const updatedPatterns = new Set(appliedPatterns);
   const patternMessages = [];
 
-  if (pair && !updatedPatterns.has("pair")) {
+  // Note: 'prev' needs to be available in the updatePlayer function
+  // You can't directly use 'prev' outside of the updatePlayer function
+
+  if (rockSolid && !updatedPatterns.has("rockSolid")) {
     setPlayer((prev) => ({
       ...prev,
-      attack: prev.attack + 5,
+      defense: prev.defense + 10,
     }));
-    updatedPatterns.add("pair");
-    patternMessages.push("Pair: Attack increased by 5");
+    updatedPatterns.add("rockSolid");
+    patternMessages.push("rockSolid: Defense increased by 10");
+  }
+  if (secondWind && !updatedPatterns.has("secondWind")) {
+    setPlayer((prev) => ({
+      ...prev,
+      hp: prev.hp + 15,
+    }));
+    updatedPatterns.add("secondWind");
+    patternMessages.push("secondWind: hp increased by 15");
+  }
+  if (cuttingEdge && !updatedPatterns.has("cuttingEdge")) {
+    setPlayer((prev) => ({
+      ...prev,
+      attack: prev.attack + 10,
+    }));
+    updatedPatterns.add("cuttingEdge");
+    patternMessages.push("cuttingEdge: attack increased by 10");
   }
 
   if (threeOfAKind && !updatedPatterns.has("threeOfAKind")) {
     setPlayer((prev) => ({
       ...prev,
-      attack: prev.attack * 1.5,
+      multiplier: 1.5,
     }));
     updatedPatterns.add("threeOfAKind");
     patternMessages.push("Three of a Kind: Attack multiplied by 1.5");
@@ -32,7 +51,7 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
   if (fourOfAKind && !updatedPatterns.has("fourOfAKind")) {
     setPlayer((prev) => ({
       ...prev,
-      attack: prev.attack * 2,
+      multiplier: 2,
     }));
     updatedPatterns.add("fourOfAKind");
     patternMessages.push("Four of a Kind: Attack multiplied by 2");
@@ -41,7 +60,7 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
   if (fullHouse && !updatedPatterns.has("fullHouse")) {
     setPlayer((prev) => ({
       ...prev,
-      attack: prev.attack * 3,
+      multiplier: 3,
     }));
     updatedPatterns.add("fullHouse");
     patternMessages.push("Full House: Attack multiplied by 3");
