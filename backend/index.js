@@ -1,31 +1,46 @@
-const express = require("express");
+const express = require('express');
 // const http = require('http');
-const { Server } = require("socket.io");
-
+const { Server } = require('socket.io');
+const cors = require('cors');
 const PORT = process.env.PORT || 3001;
+
 const app = express();
+// const server = http.createServer(app);
+
+// Use CORS to allow frontend connection
+app.use(cors({
+  origin: "http://localhost:3000", // React app URL
+  methods: ["GET", "POST"],
+}));
 
 const http = app.listen(3001, () => {
   console.log(`Server listening on PORT: ${PORT}`);
 });
 
-const io = new Server(http);
+// const io = new Server(http);
 
-io.on("connection", (client) => {
-  console.log("a user connected:", client.id);
+const io = new Server(http, {
+  cors: {
+    origin: "http://localhost:3000", // React app URL
+    methods: ["GET", "POST"]
+  }
+});
 
-  // Handle 'signal' events sent from clients
-  client.on("signal", (data) => {
-    io.to(data.to).emit("signal", data);
+io.on('connection', (client) => {
+  console.log('a user connected:', client.id);
+
+  // Handle signaling data sent from clients
+  client.on('signal', (data) => {
+    io.to(data.to).emit('signal', data);
   });
 
-  // Handle chatMessage events
-  client.on("chatMessage", (msg) => {
-    io.emit("chatMessage", msg);
+  // Listen for incoming messages
+  client.on('chatMessage', (msg) => {
+    io.emit('chatMessage', msg);
   });
 
-  client.on("disconnect", () => {
-    console.log("user disconnected:", client.id);
+  client.on('disconnect', () => {
+    console.log('user disconnected:', client.id);
   });
 });
 

@@ -11,8 +11,12 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
   const updatedPatterns = new Set(appliedPatterns);
   const patternMessages = [];
 
+<<<<<<< HEAD
   // Note: 'prev' needs to be available in the updatePlayer function
   // You can't directly use 'prev' outside of the updatePlayer function
+=======
+
+>>>>>>> 0b36e9b4f2096e951596d52f9673066f61147ae8
 
   if (rockSolid && !updatedPatterns.has("rockSolid")) {
     setPlayer((prev) => ({
