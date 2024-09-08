@@ -1,4 +1,5 @@
 const authHelpers = (db) => {
+  
   const getUserByEmail = async (email) => {
     const user = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
