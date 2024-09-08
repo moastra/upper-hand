@@ -5,7 +5,7 @@ const useCountdown = (isActive, onEnd) => {
   const hasStarted = useRef(false);
   useEffect(() => {
     let countdownInterval;
-
+    console.log("line 8 useCountdown");
     if (isActive) {
       if (!hasStarted.current) {
         setCountdown(3); // Reset countdown to 3 when isActive becomes true
@@ -27,7 +27,7 @@ const useCountdown = (isActive, onEnd) => {
     }
 
     return () => clearInterval(countdownInterval);
-  }, [isActive, onEnd]);
+  }, [isActive]);
 
   return countdown;
 };
