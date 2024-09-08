@@ -177,17 +177,20 @@
 
 .hp-bar {
   position: absolute;
-  top: 0;
-  width: 100%;
+  width: 100%; /* Full width of the parent container */
   text-align: center;
   font-weight: bold;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: red;
   padding: 5px;
+  box-sizing: border-box; /* Include padding in width calculation */
+  overflow: hidden; /* Ensure text stays within the bar */
 }
-.video-top .hp-bar {
+.hp-bar.local {
   top: 10px;
+  background-color: green;
 }
-.video-bottom .hp-bar {
+.hp-bar.remote {
+  background-color: blue;
   bottom: 10px;
 }

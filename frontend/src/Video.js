@@ -31,12 +31,14 @@ const Video = ({ onGameResult, playerStats }) => {
   );
   // Update HP from playerStats
   useEffect(() => {
-    console.log("Received playerStats:", playerStats);
     if (playerStats.player1 && playerStats.player2) {
       setPlayer1HP(playerStats.player1.hp);
       setPlayer2HP(playerStats.player2.hp);
     }
   }, [playerStats]);
+
+  const player1Percentage = (player1HP / 300) * 100; // change to max hp depend on player later
+  const player2Percentage = (player2HP / 300) * 100; // change to max hp depend on player later
 
   useEffect(() => {
     // Initialize PeerJS
@@ -174,17 +176,24 @@ const Video = ({ onGameResult, playerStats }) => {
       ]);
     }
   }, [remoteData, rounds]);
-
   const lastResult =
     gameResult.length > 0 ? gameResult[gameResult.length - 1] : null;
-
-  onGameResult(lastResult);
+  useEffect(() => {
+    if (gameResult) {
+      onGameResult(gameResult);
+    }
+  }, [gameResult, onGameResult]);
   return (
     <div className="container">
       <div className="video-sections">
         <div className="video-top">
           <video ref={localVideoRef} autoPlay muted />
-          <div className="hp-bar local">Player 1 HP: {player1HP}</div>
+          <div
+            className="hp-bar local"
+            style={{ width: `${player1Percentage}%` }}
+          >
+            Player 1 HP: {player1HP}
+          </div>
         </div>
         {lastResult && (
           <div className="result-box">
@@ -205,7 +214,12 @@ const Video = ({ onGameResult, playerStats }) => {
             autoPlay
             className={isCountdownActive ? "video-hidden" : ""}
           />
-          <div className="hp-bar remote">Player 2 HP: {player2HP}</div>
+          <div
+            className="hp-bar remote"
+            style={{ width: `${player2Percentage}%` }}
+          >
+            Player 2 HP: {player2HP}
+          </div>
         </div>
         <div className="canvas-container">
           <canvas ref={canvasRef} />

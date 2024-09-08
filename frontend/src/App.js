@@ -9,6 +9,7 @@ const App = () => {
 
   const handleGameResult = (result) => {
     setGameResult(result);
+    console.log(gameResult);
   };
   const handlePlayerStatsUpdate = (stats) => {
     setPlayerStats(stats);
