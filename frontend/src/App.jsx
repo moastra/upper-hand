@@ -15,6 +15,7 @@ import ChatVideo from "./components/ChatVideoLayout";
 import Chat from "./components/ChatLayout";
 import Home from "./components/notLoggedInHome";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import Customize from "./components/Customize";
 
 
 const App = () => {
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/playnow" element={<PlayNow />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/customize" element={<Customize />} />
           <Route path="/accountdetails" element={<AccountDetails />} />
           <Route path="/setavatar" element={<SetAvatar />} />
 
