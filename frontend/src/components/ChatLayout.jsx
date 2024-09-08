@@ -1,12 +1,13 @@
 import { Outlet } from 'react-router-dom'
-import Chat from '../Chat'
+import LobbyChat from '../LobbyChat';
+
 
 const ChatVideo = () => {
   return (
     <div>
       <h2>Chat Layout Componnents</h2>
       <Outlet />
-      <Chat />
+      <LobbyChat />
     </div>
   );
 };
