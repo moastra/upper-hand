@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Player from "./Player";
 import { checkPatterns } from "../utility/roundpattern";
-
+import "./Game.css";
 const initialPlayerState = {
   name: "Player 1",
   hp: 300,
@@ -28,6 +28,8 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
   const [appliedPatterns1, setAppliedPatterns1] = useState(new Set());
   const [appliedPatterns2, setAppliedPatterns2] = useState(new Set());
   const [processingComplete, setProcessingComplete] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); // State for the pop-up
+  const [patternMessages, setPatternMessages] = useState([]);
 
   useEffect(() => {
     if (initialGameResult.length === 0) return;
@@ -50,16 +52,20 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
 
   const processChoices = useCallback(() => {
     setProcessingComplete(false);
-    setAppliedPatterns1((prevPatterns) =>
-      checkPatterns(player1Choices, setPlayer1, prevPatterns)
-    );
-    // console.log("player 1 choices", player1Choices);
-    // console.log("player 1 attack", player1.attack);
-    setAppliedPatterns2((prevPatterns) =>
-      checkPatterns(player2Choices, setPlayer2, prevPatterns)
-    );
-    // console.log("player 2 choices", player2Choices);
-    // console.log("player 2 attack", player2.attack);
+    const { updatedPatterns: patterns1, patternMessages: messages1 } =
+      checkPatterns(player1Choices, setPlayer1, appliedPatterns1);
+    const { updatedPatterns: patterns2, patternMessages: messages2 } =
+      checkPatterns(player2Choices, setPlayer2, appliedPatterns2);
+
+    setAppliedPatterns1(patterns1);
+    setAppliedPatterns2(patterns2);
+
+    // const combinedMessages = [...messages1, ...messages2];
+    if (messages1.length > 0) {
+      setPatternMessages(messages1);
+      setShowPopup(true);
+    }
+
     setProcessingComplete(true);
   }, [player1Choices, player2Choices]);
 
@@ -111,6 +117,17 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
     <div className="player-container">
       <Player player={player1} />
       <Player player={player2} />
+      {showPopup && (
+        <div className="popup">
+          <h2>Pattern Applied!</h2>
+          <ul>
+            {patternMessages.map((msg, index) => (
+              <li key={index}>{msg}</li>
+            ))}
+          </ul>
+          <button onClick={() => setShowPopup(false)}>Close</button>
+        </div>
+      )}
     </div>
   );
 };

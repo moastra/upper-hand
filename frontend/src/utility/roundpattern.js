@@ -9,6 +9,7 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
   appliedPatterns = appliedPatterns || new Set();
 
   const updatedPatterns = new Set(appliedPatterns);
+  const patternMessages = [];
 
   if (pair && !updatedPatterns.has("pair")) {
     setPlayer((prev) => ({
@@ -16,6 +17,7 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
       attack: prev.attack + 5,
     }));
     updatedPatterns.add("pair");
+    patternMessages.push("Pair: Attack increased by 5");
   }
 
   if (threeOfAKind && !updatedPatterns.has("threeOfAKind")) {
@@ -24,6 +26,7 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
       attack: prev.attack * 1.5,
     }));
     updatedPatterns.add("threeOfAKind");
+    patternMessages.push("Three of a Kind: Attack multiplied by 1.5");
   }
 
   if (fourOfAKind && !updatedPatterns.has("fourOfAKind")) {
@@ -32,6 +35,7 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
       attack: prev.attack * 2,
     }));
     updatedPatterns.add("fourOfAKind");
+    patternMessages.push("Four of a Kind: Attack multiplied by 2");
   }
 
   if (fullHouse && !updatedPatterns.has("fullHouse")) {
@@ -40,7 +44,11 @@ export const checkPatterns = (counts, setPlayer, appliedPatterns) => {
       attack: prev.attack * 3,
     }));
     updatedPatterns.add("fullHouse");
+    patternMessages.push("Full House: Attack multiplied by 3");
   }
 
-  return updatedPatterns;
+  return {
+    updatedPatterns,
+    patternMessages,
+  };
 };
