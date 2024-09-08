@@ -1,12 +1,14 @@
 import React from "react";
-import Chat from "./Chat";
-import Video from "./Video";
-import PeerChat from "./PeerChat";
+// import Video from "./Video";
+// import PeerChat from "./PeerChat";
 import VideoChat from "./VideoChat";
+import LobbyChat from "./LobbyChat";
+
 
 const App = () => {
   return (
     <div className="App">
+      <LobbyChat />
       <VideoChat />
       {/* <Chat /> */}
       {/* <Video /> */}
@@ -14,13 +16,5 @@ const App = () => {
     </div>
   );
 };
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <Chat />
-//     </div>
-//   );
-// }
 
 export default App;
