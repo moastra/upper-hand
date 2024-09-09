@@ -5,7 +5,7 @@
   "proxy": "http://localhost:3001",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon ./bin/www",
+    "dev": "nodemon index.js",
     "db:reset": "node ./db/reset.js",
     "hasher": "node ./db/hasher.js"
   },

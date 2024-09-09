@@ -34,5 +34,24 @@ export const applyPowerUp = (setPlayer, powerUpId) => {
   }
 };
 
+// Function to get power-up details
 export const getPowerUpDetails = (powerUpId) =>
   powerUps[powerUpId] || { name: "None", description: "No power-up active" };
+
+// PowerUpInfo Component
+const PowerUpInfo = ({ player }) => {
+  // Destructure player properties and get power-up details
+  const { powerUp } = player;
+  const { name, description } = getPowerUpDetails(powerUp);
+
+  return (
+    <div className="power-up">
+      <h3>{player.name} Power-Up</h3>
+      <p>
+        <strong>{name}</strong>
+      </p>
+      <p>{description}</p>
+    </div>
+  );
+};
+export default PowerUpInfo;

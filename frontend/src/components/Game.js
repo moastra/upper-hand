@@ -3,7 +3,7 @@ import Player from "./Player";
 import { checkPatterns } from "../utility/roundpattern";
 import "./Game.css";
 import { updatePlayerHP } from "../utility/updatePlayerHp";
-import { applyPowerUp, getPowerUpDetails } from "../utility/powerUpUtils";
+import PowerUpInfo, { applyPowerUp } from "../utility/powerUpUtils";
 const initialPlayerState = {
   name: "Player 1",
   hp: 300,
@@ -216,8 +216,12 @@ const Game = ({
   }, [response]);
   return (
     <div className="player-container">
-      <Player player={player1} />
-      <Player player={player2} />
+      <div className="player1-container">
+        <Player player={player1} />
+      </div>
+      <div className="player2-container">
+        <Player player={player2} />
+      </div>
       {showPopup && (
         <div className="popup">
           <h2>Pattern Applied!</h2>
@@ -230,23 +234,15 @@ const Game = ({
         </div>
       )}
       <div className="power-ups">
-        <div className="power-up">
-          <h3>Player 1 Power-Up</h3>
-          <p>
-            <strong>{getPowerUpDetails(player1.powerUp).name}</strong>
-          </p>
-          <p>{getPowerUpDetails(player1.powerUp).description}</p>
+        <div className="player1-power-up">
+          <PowerUpInfo player={player1} />
         </div>
-        <div className="power-up">
-          <h3>Player 2 Power-Up</h3>
-          <p>
-            <strong>{getPowerUpDetails(player2.powerUp).name}</strong>
-          </p>
-          <p>{getPowerUpDetails(player2.powerUp).description}</p>
+        <div className="player2-power-up">
+          <PowerUpInfo player={player2} />
         </div>
       </div>
       {gameOver && showRematchPopup && (
-        <div className="popup">
+        <div className="popup gameover">
           <h2>Game Over!</h2>
           <p>{winner === "Draw" ? "It's a draw!" : `${winner} wins!`}</p>
           <button onClick={handleRematch}>Rematch</button>

@@ -2,7 +2,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   position: relative; /* Needed for absolute positioning of the result box */
   overflow: hidden; /* Prevent scrolling */
 }
@@ -174,7 +173,6 @@
   text-align: center;
   background-color: #525050;
 }
-
 
 .chat-section {
   position: fixed;
