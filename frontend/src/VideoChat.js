@@ -12,6 +12,7 @@ const VideoChat = ({
   rematch,
   disconnected,
   onDisconnect,
+  onResponse,
 }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -291,6 +292,7 @@ const VideoChat = ({
 
     setGameResult([]); // Ensure game result is cleared
     onGameResult([]); // Notify parent component about the reset
+    onResponse(true);
     onRematch(false);
   };
 
@@ -325,6 +327,8 @@ const VideoChat = ({
 
     setGameResult([]); // Ensure game result is cleared
     onGameResult([]); // Notify parent component about the reset
+    onResponse(true);
+
     onDisconnect(false); // Ensure this callback is properly defined
   };
 

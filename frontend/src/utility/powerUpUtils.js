@@ -33,3 +33,6 @@ export const applyPowerUp = (setPlayer, powerUpId) => {
     });
   }
 };
+
+export const getPowerUpDetails = (powerUpId) =>
+  powerUps[powerUpId] || { name: "None", description: "No power-up active" };

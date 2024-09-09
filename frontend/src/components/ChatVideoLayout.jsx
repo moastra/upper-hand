@@ -8,6 +8,7 @@ const ChatVideo = () => {
   const [playerStats, setPlayerStats] = useState({ player1: {}, player2: {} });
   const [rematch, setRematch] = useState(false);
   const [disconnect, setDisconnect] = useState(false);
+  const [response, setResponse] = useState(false);
 
   const handleGameResult = (result) => {
     setGameResult(result);
@@ -22,6 +23,9 @@ const ChatVideo = () => {
   const handleDisconnect = (boolean) => {
     setDisconnect(boolean);
   };
+  const handleResponse = (boolean) => {
+    setResponse(boolean);
+  };
 
   return (
     <div>
@@ -34,6 +38,7 @@ const ChatVideo = () => {
         rematch={rematch}
         onDisconnect={handleDisconnect}
         disconnected={disconnect}
+        onResponse={handleResponse}
       />
       {gameResult && (
         <Game
@@ -41,6 +46,7 @@ const ChatVideo = () => {
           onPlayerStatsUpdate={handlePlayerStatsUpdate}
           onDisconnect={handleDisconnect}
           onRematch={handleRematch}
+          response={response}
         />
       )}
     </div>

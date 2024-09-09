@@ -3,7 +3,7 @@ import Player from "./Player";
 import { checkPatterns } from "../utility/roundpattern";
 import "./Game.css";
 import { updatePlayerHP } from "../utility/updatePlayerHp";
-import { applyPowerUp } from "../utility/powerUpUtils";
+import { applyPowerUp, getPowerUpDetails } from "../utility/powerUpUtils";
 const initialPlayerState = {
   name: "Player 1",
   hp: 300,
@@ -18,6 +18,7 @@ const Game = ({
   onPlayerStatsUpdate,
   onDisconnect,
   onRematch,
+  response,
 }) => {
   const [player1, setPlayer1] = useState(initialPlayerState);
   const [player2, setPlayer2] = useState({
@@ -42,7 +43,7 @@ const Game = ({
   const [patternMessages, setPatternMessages] = useState([]);
   const [gameOver, setGameOver] = useState(false); // State to check if game is over
   const [winner, setWinner] = useState(null); // State to store the winner
-  const maxRound = 7;
+  const maxRound = 2;
   const [powerUpApplied, setPowerUpApplied] = useState({
     player1: false,
     player2: false,
@@ -154,6 +155,7 @@ const Game = ({
         setGameOver(true);
       }
       setProcessingComplete(false); // Reset the flag for future updates
+      setShowRematchPopup(true);
     }
   }, [initialGameResult, processingComplete]);
 
@@ -189,12 +191,29 @@ const Game = ({
   const handleRematch = () => {
     resetGameState();
     onRematch(true); // Notify the parent component if needed
+    onPlayerStatsUpdate({
+      player1: { ...player1 },
+      player2: { ...player2 },
+    });
   };
 
   const handleDisconnect = () => {
     resetGameState();
     onDisconnect(true); // Notify the parent component if needed
+    onPlayerStatsUpdate({
+      player1: { ...player1 },
+      player2: { ...player2 },
+    });
   };
+  useEffect(() => {
+    if (response === true) {
+      resetGameState();
+      onPlayerStatsUpdate({
+        player1: { ...player1 },
+        player2: { ...player2 },
+      });
+    }
+  }, [response]);
   return (
     <div className="player-container">
       <Player player={player1} />
@@ -210,14 +229,30 @@ const Game = ({
           <button onClick={() => setShowPopup(false)}>Close</button>
         </div>
       )}
-      {/* {gameOver && showRematchPopup && ( */}
-      <div className="popup">
-        <h2>Game Over!</h2>
-        <p>{winner === "Draw" ? "It's a draw!" : `${winner} wins!`}</p>
-        <button onClick={handleRematch}>Rematch</button>
-        <button onClick={handleDisconnect}>Disconnect</button>
+      <div className="power-ups">
+        <div className="power-up">
+          <h3>Player 1 Power-Up</h3>
+          <p>
+            <strong>{getPowerUpDetails(player1.powerUp).name}</strong>
+          </p>
+          <p>{getPowerUpDetails(player1.powerUp).description}</p>
+        </div>
+        <div className="power-up">
+          <h3>Player 2 Power-Up</h3>
+          <p>
+            <strong>{getPowerUpDetails(player2.powerUp).name}</strong>
+          </p>
+          <p>{getPowerUpDetails(player2.powerUp).description}</p>
+        </div>
       </div>
-      {/* )} */}
+      {gameOver && showRematchPopup && (
+        <div className="popup">
+          <h2>Game Over!</h2>
+          <p>{winner === "Draw" ? "It's a draw!" : `${winner} wins!`}</p>
+          <button onClick={handleRematch}>Rematch</button>
+          <button onClick={handleDisconnect}>Disconnect</button>
+        </div>
+      )}
     </div>
   );
 };
