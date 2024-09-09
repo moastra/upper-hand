@@ -3,19 +3,27 @@ import Player from "./Player";
 import { checkPatterns } from "../utility/roundpattern";
 import "./Game.css";
 import { updatePlayerHP } from "../utility/updatePlayerHp";
+import { applyPowerUp } from "../utility/powerUpUtils";
 const initialPlayerState = {
   name: "Player 1",
   hp: 300,
   attack: 10,
   defense: 5,
   multiplier: 1,
+  powerUp: 1,
 };
 
-const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
+const Game = ({
+  initialGameResult,
+  onPlayerStatsUpdate,
+  onDisconnect,
+  onRematch,
+}) => {
   const [player1, setPlayer1] = useState(initialPlayerState);
   const [player2, setPlayer2] = useState({
     ...initialPlayerState,
     name: "Player 2",
+    powerUp: 2,
   });
   const [player1Choices, setPlayer1Choices] = useState({
     Rock: 0,
@@ -32,6 +40,30 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
   const [processingComplete, setProcessingComplete] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // State for the pop-up
   const [patternMessages, setPatternMessages] = useState([]);
+  const [gameOver, setGameOver] = useState(false); // State to check if game is over
+  const [winner, setWinner] = useState(null); // State to store the winner
+  const maxRound = 7;
+  const [powerUpApplied, setPowerUpApplied] = useState({
+    player1: false,
+    player2: false,
+  });
+  const [showRematchPopup, setShowRematchPopup] = useState(false);
+
+  if (!powerUpApplied.player1 && player1.powerUp) {
+    applyPowerUp(setPlayer1, player1.powerUp);
+    setPowerUpApplied((prev) => ({
+      ...prev,
+      player1: true,
+    }));
+  }
+
+  if (!powerUpApplied.player2 && player2.powerUp) {
+    applyPowerUp(setPlayer2, player2.powerUp);
+    setPowerUpApplied((prev) => ({
+      ...prev,
+      player2: true,
+    }));
+  }
 
   useEffect(() => {
     if (initialGameResult.length === 0) return;
@@ -80,14 +112,7 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
       if (initialGameResult.length === 0) return;
 
       const lastResult = initialGameResult[initialGameResult.length - 1];
-      const { result } = lastResult;
-
-      console.log("Last Result:", lastResult);
-      console.log("Player 1 Attack:", player1.attack);
-      console.log("Player 2 Defense:", player2.defense);
-      console.log("player 1 muti:", player1.multiplier);
-      console.log("Player 2 HP before:", player2.hp);
-      console.log("Damage Calculation:", player1.attack - player2.defense);
+      const { round, result } = lastResult;
 
       setPlayer2((prev) => ({
         ...prev,
@@ -113,6 +138,21 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
               )
             : prev.hp,
       }));
+      // Check if the game should end
+      if (round >= maxRound || player1.hp <= 0 || player2.hp <= 0) {
+        let winner;
+        if (player1.hp <= 0 && player2.hp <= 0) {
+          winner = "Draw";
+        } else if (player1.hp <= 0) {
+          winner = player2.name;
+        } else if (player2.hp <= 0) {
+          winner = player1.name;
+        } else {
+          winner = player1.hp > player2.hp ? player1.name : player2.name;
+        }
+        setWinner(winner);
+        setGameOver(true);
+      }
       setProcessingComplete(false); // Reset the flag for future updates
     }
   }, [initialGameResult, processingComplete]);
@@ -122,10 +162,39 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
       player1: { ...player1 },
       player2: { ...player2 },
     });
-    console.log("Player 1 HP after:", player1.hp);
-    console.log("Player 2 HP after:", player2.hp);
   }, [player1.hp, player2.hp]);
 
+  const resetGameState = () => {
+    setPlayer1(initialPlayerState);
+    setPlayer2({
+      ...initialPlayerState,
+      name: "Player 2",
+      powerUp: 2,
+    });
+    setPlayer1Choices({ Rock: 0, Paper: 0, Scissors: 0 });
+    setPlayer2Choices({ Rock: 0, Paper: 0, Scissors: 0 });
+    setAppliedPatterns1(new Set());
+    setAppliedPatterns2(new Set());
+    setProcessingComplete(false);
+    setShowPopup(false);
+    setPatternMessages([]);
+    setGameOver(false);
+    setWinner(null);
+    setShowRematchPopup(false);
+    setPowerUpApplied({
+      player1: false,
+      player2: false,
+    });
+  };
+  const handleRematch = () => {
+    resetGameState();
+    onRematch(true); // Notify the parent component if needed
+  };
+
+  const handleDisconnect = () => {
+    resetGameState();
+    onDisconnect(true); // Notify the parent component if needed
+  };
   return (
     <div className="player-container">
       <Player player={player1} />
@@ -141,6 +210,14 @@ const Game = ({ initialGameResult, onPlayerStatsUpdate }) => {
           <button onClick={() => setShowPopup(false)}>Close</button>
         </div>
       )}
+      {/* {gameOver && showRematchPopup && ( */}
+      <div className="popup">
+        <h2>Game Over!</h2>
+        <p>{winner === "Draw" ? "It's a draw!" : `${winner} wins!`}</p>
+        <button onClick={handleRematch}>Rematch</button>
+        <button onClick={handleDisconnect}>Disconnect</button>
+      </div>
+      {/* )} */}
     </div>
   );
 };
