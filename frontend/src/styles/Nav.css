@@ -1,0 +1,92 @@
+.nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;
+  padding: 1px 5px;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+}
+
+.nav-logo {
+  display: flex;
+  /* flex: 1; */
+  height: 50px;
+  width: auto;
+  align-items: center;
+}
+
+.nav-title {
+  /* display: flex; */
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  /* flex: 2; */
+  font-size: 1.5rem;
+  font-weight: bold;
+  /* align-items: center; */
+  text-align: center;
+}
+
+.nav-links {
+  display: flex;
+  /* flex: 3; */
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info p {
+  margin: 0;
+}
+
+.user-info strong {
+  font-weight: bold;
+}
+
+.nav-container button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.nav-container button:hover {
+  background-color: #004494;
+}
+
+.nav-container .back-btn {
+  margin-left: 20px;
+  background-color: #28a745;
+}
+
+.nav-container .back-btn:hover {
+  background-color: #218838;
+}
+
+/* Ensure the page content does not overlap with the fixed nav */
+.body-content {
+  padding-top: 10px;
+}

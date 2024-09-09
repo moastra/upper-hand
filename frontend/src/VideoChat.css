@@ -209,6 +209,7 @@
   color: #333;
   max-width: 100%;
   overflow: hidden;
+  text-align: left;
 }
 
 .chat-section .from {

@@ -16,7 +16,8 @@ import Chat from "./components/ChatLayout";
 import Home from "./components/notLoggedInHome";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import Customize from "./components/Customize";
-
+import Homepage from "./components/Homepage";
+import LoginRegister from "./components/LoginRegister"
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
         <Nav />
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Homepage />} />
 
 
           {/* Makes it so that user needs to be logged in to access dashboard. */}
@@ -35,6 +36,7 @@ const App = () => {
 
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/loginregister" element={<LoginRegister />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/playnow" element={<PlayNow />} />
           <Route path="/privacy" element={<Privacy />} />

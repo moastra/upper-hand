@@ -2,29 +2,31 @@ const express = require('express');
 // const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const { createServer } = require('http');
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 // const server = http.createServer(app);
 
 // Use CORS to allow frontend connection
-app.use(cors({
-  origin: "http://localhost:3000", // React app URL
-  methods: ["GET", "POST"],
-}));
+// app.use(cors({
+//   origin: '*', // React app URL
+//   // methods: ["GET", "POST"],
+// }));
 
-const http = app.listen(3001, () => {
+server.listen(3001, () => {
   console.log(`Server listening on PORT: ${PORT}`);
 });
 
-// const io = new Server(http);
 
-const io = new Server(http, {
-  cors: {
-    origin: "http://localhost:3000", // React app URL
-    methods: ["GET", "POST"]
-  }
-});
+// const io = new Server(http, {
+//   cors: {
+//     origin: '*', // React app URL
+//     // methods: ["GET", "POST"]
+//   }
+// });
 
 io.on('connection', (client) => {
   console.log('a user connected:', client.id);
