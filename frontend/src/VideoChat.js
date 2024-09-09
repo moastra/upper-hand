@@ -278,9 +278,6 @@ const VideoChat = ({
   };
 
   const resetForRematch = async () => {
-    if (dataConnection && dataConnection.open) {
-      dataConnection.send({ type: "rematch" }); // Notify remote peer about the rematch
-    }
     // Reset video chat state as needed
     setRemoteData("");
     setGameResult([]);
@@ -298,16 +295,14 @@ const VideoChat = ({
 
   useEffect(() => {
     if (rematch === true) {
+      if (dataConnection && dataConnection.open) {
+        dataConnection.send({ type: "rematch" }); // Notify remote peer about the rematch
+      }
       resetForRematch();
     }
   }, [rematch]);
 
   const disconnect = async () => {
-    if (dataConnection && dataConnection.open) {
-      dataConnection.send({ type: "disconnect" });
-      console.log("Disconnect signal sent");
-    }
-
     handleDisconnect(
       localVideoRef,
       remoteVideoRef,
@@ -334,6 +329,10 @@ const VideoChat = ({
 
   useEffect(() => {
     if (disconnected === true) {
+      if (dataConnection && dataConnection.open) {
+        dataConnection.send({ type: "disconnect" });
+        console.log("Disconnect signal sent");
+      }
       disconnect();
     }
   }, [disconnected]);
