@@ -5,9 +5,9 @@ import LobbyChat from '../LobbyChat';
 const ChatVideo = () => {
   return (
     <div>
+      <LobbyChat />
       <h2>Chat Layout Componnents</h2>
       <Outlet />
-      <LobbyChat />
     </div>
   );
 };

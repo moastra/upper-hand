@@ -430,7 +430,7 @@ const VideoChat = ({
       </table>
 
       <div className="chat-section">
-        <h3>Chat:</h3>
+        <h3>Chat</h3>
         {chat.map((chatItem, index) => (
           <p key={index}>
             <b>{chatItem.from}:</b> {chatItem.message}

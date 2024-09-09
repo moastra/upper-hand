@@ -1,0 +1,154 @@
+/* Global reset and font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body and background setup */
+body {
+  background: linear-gradient(to bottom right, #282c34, #3a3d4b);
+  color: #fff;
+  min-height: 100vh; /* Ensures the body is at least 100% of the viewport height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  z-index: 100;
+}
+
+/* Centered container */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding-top: 60px; /* Account for the navbar height */
+  flex: 1;
+}
+
+/* Header styles */
+.header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #ff6f61;
+}
+
+.header span {
+  color: #00a8ff;
+}
+
+.header p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* Game info styles */
+.game-info {
+  margin-bottom: 2rem;
+}
+
+.game-info h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.game-info p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Button styles */
+.start-btn {
+  background: #00a8ff;
+  color: #fff;
+  padding: 1rem 2rem;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.start-btn:hover {
+  background: #ff6f61;
+}
+
+/* Choices section styling */
+.choices {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.choices img {
+  width: 500px;
+  height: auto;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.choices:hover img {
+  transform: scale(1.2);
+}
+
+footer {
+  /* background-color: #333; */
+  align-content: end;
+  color: #fff;
+  text-align: center;
+  /* padding: 10px; */
+  /* position: relative; */
+  bottom: 0;
+  width: 100%;
+}
+
+/* Authentication buttons */
+.auth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.auth-btn {
+  background: #00a8ff;
+  color: #fff;
+  padding: 1rem 2rem;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 5px;
+}
+
+.auth-btn:hover {
+  background: #ff6f61;
+}
+
+.login-btn {
+  background-color: #00a8ff;
+}
+
+.register-btn {
+  background-color: #ff6f61;
+}

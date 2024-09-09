@@ -9,8 +9,9 @@ const LobbyChat = () => {
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const socket = io('http://localhost:3001');
+    const socket = io();
     setSocket(socket);
+
     socket.on('chatMessage', (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
@@ -28,24 +29,34 @@ const LobbyChat = () => {
     }
   };
 
+  // Function to handle Enter key press
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage(e);
+    }
+  };
+
   return (
     <div>
-      <div>
-        <h2>Chat</h2>
-        <div>
+      <div className="chat-section">
+        <h3>Global Chat</h3>
+        <div className="messages">
           {messages.map((msg, index) => (
-            <div key={index}>{msg}</div>
+            <p key={index}>{msg}</p>
           ))}
         </div>
+        <form onSubmit={sendMessage}>
+          <input
+            type="text"
+            placeholder="Type a message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button type="submit">Send</button>
+        </form>
       </div>
-      <form onSubmit={sendMessage}>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
     </div>
   );
 };
