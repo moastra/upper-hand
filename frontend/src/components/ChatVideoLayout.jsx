@@ -29,7 +29,6 @@ const ChatVideo = () => {
 
   return (
     <div>
-      <h2>Chat Video Layout Componnents</h2>
       <Outlet />
       <VideoChat
         onGameResult={handleGameResult}
