@@ -3,6 +3,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+const { Server } = require('socket.io');
+
+const port = process.env.PORT || 3001;
 
 const db = require('./db');
 const dbHelpers = require('./db/helpers/dbHelpers')(db);
@@ -28,4 +31,35 @@ app.use('/api', sessionAuth(authHelpers)); //Login-Logout post routes
 app.use('/api', customize(customizeHelpers)); //Customize - stats routes
 app.use('/api/users', usersRouter(dbHelpers));
 
-module.exports = app;
+const http = app.listen(port, () => {
+  console.log(`Server listening on PORT: ${port}`);
+});
+
+const io = new Server(http);
+
+// const io = new Server(http, {
+//   cors: {
+//     origin: '*', // React app URL
+//     // methods: ["GET", "POST"]
+//   }
+// });
+
+io.on('connection', (client) => {
+  console.log('a user connected:', client.id);
+
+  // Handle signaling data sent from clients
+  client.on('signal', (data) => {
+    io.to(data.to).emit('signal', data);
+  });
+
+  // Listen for incoming messages
+  client.on('chatMessage', (msg) => {
+    io.emit('chatMessage', msg);
+  });
+
+  client.on('disconnect', () => {
+    console.log('user disconnected:', client.id);
+  });
+});
+
+// module.exports = app;
