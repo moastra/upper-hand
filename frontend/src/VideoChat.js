@@ -5,7 +5,7 @@ import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 import { createPeer, getPeerId } from "./peerHelper";
 import { handleDisconnect } from "./utility/disconnectHelper";
-import minimize from "./image/minimize-icon.png";
+import minimize from "./image/minimize2.png";
 const VideoChat = ({
   onGameResult,
   playerStats,
