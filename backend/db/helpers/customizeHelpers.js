@@ -25,6 +25,7 @@ const customizeHelpers = (db) => {
     return powerUps.rows;
   };
 
+
   const getUserStorage = async (userId) => {
     const storage = await db.query(
       `SELECT pu.name, pu.description, pu.effect, pu.value
