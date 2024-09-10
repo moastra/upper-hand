@@ -54,7 +54,7 @@ const PowerUpInfo = ({ player }) => {
 
   return (
     <div className="power-up">
-      <h3>{player.name} Power-Up</h3>
+      <h3>Power-Up</h3>
       <p>
         <strong>{name}</strong>
       </p>

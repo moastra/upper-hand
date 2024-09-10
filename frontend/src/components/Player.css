@@ -1,8 +1,26 @@
+/* Player.css */
 .players {
+  text-align: center;
   border: 2px solid #333;
   border-radius: 8px;
   padding: 10px;
   width: 250px;
   background: #f4f4f4;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 60px 0 120px rgba(3, 97, 248, 0.5),
+    inset -60px 0 120px rgba(14, 176, 188, 0.5);
+}
+
+.shadow-low {
+  box-shadow: inset 60px 0 120px rgba(255, 112, 67, 0.5),
+    inset -60px 0 120px rgba(255, 202, 40, 0.5);
+}
+
+.shadow-medium {
+  box-shadow: inset 60px 0 120px rgba(174, 160, 29, 0.658),
+    inset -60px 0 120px rgba(255, 202, 40, 0.7);
+}
+
+.shadow-high {
+  box-shadow: inset 60px 0 120px rgba(255, 112, 67, 1),
+    inset -60px 0 120px rgba(248, 12, 12, 0.836);
 }

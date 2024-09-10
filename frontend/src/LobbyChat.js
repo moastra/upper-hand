@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
+import { fetchCustomizationData } from "./utility/fetchCustomizeData";
 
 const LobbyChat = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCustomizationData();
+        const { name } = data;
+        setUser(name);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const socket = io();
@@ -22,6 +37,7 @@ const LobbyChat = () => {
       socket.emit("chatMessage", message);
       setMessage("");
     }
+    console.log(user.username);
   };
 
   // Function to handle Enter key press

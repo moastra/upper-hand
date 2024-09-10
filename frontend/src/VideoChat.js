@@ -5,6 +5,7 @@ import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 import { createPeer, getPeerId } from "./peerHelper";
 import { handleDisconnect } from "./utility/disconnectHelper";
+
 const VideoChat = ({
   onGameResult,
   playerStats,
@@ -46,20 +47,12 @@ const VideoChat = ({
   const [player2HP, setPlayer2HP] = useState(null);
   const player1InitialHP = hostStats.hp;
   const player2InitialHP = peerStats.hp;
-  const peerStatRef = useRef("");
+  const peerStatRef = useRef(peerStats);
   useEffect(() => {
     if (playerStats.player1 && playerStats.player2) {
       setPlayer1HP(playerStats.player1.hp);
       setPlayer2HP(playerStats.player2.hp);
     }
-    // console.log(
-    //   "player1 hp%",
-    //   player1Percentage,
-    //   "player1hp",
-    //   player1HP,
-    //   "player1 initi",
-    //   player1InitialHP
-    // );
   }, [playerStats]);
   const player1Percentage = (player1HP / player1InitialHP) * 100;
   const player2Percentage = (player2HP / player2InitialHP) * 100;
@@ -91,7 +84,10 @@ const VideoChat = ({
           onPeerStats(data.stats);
           peerStatRef.current = data.stats;
         } else {
-          setChat((prevChat) => [...prevChat, { message: data, from: "Peer" }]);
+          setChat((prevChat) => [
+            ...prevChat,
+            { message: data, from: "Opponent" },
+          ]);
         }
       });
 
@@ -118,17 +114,7 @@ const VideoChat = ({
       peerInstance.current.destroy();
     };
   }, []);
-  // Function to fetch initial player data from the database
-  // const fetchInitialPlayerData = async () => {
-  //   try {
-  //     const response = await axios.get("/api/stats:id");
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Error fetching player data:", error);
-  //     return {};
-  //   }
-  // };
-  // Function to initiate both video and chat connections to the peer
+
   const connectToPeer = () => {
     // const connectToPeer = async() => {
     if (!remotePeerId) return;
@@ -180,7 +166,7 @@ const VideoChat = ({
           } else {
             setChat((prevChat) => [
               ...prevChat,
-              { message: data, from: "Peer" },
+              { message: data, from: "Opponent" },
             ]);
           }
         });
@@ -361,20 +347,22 @@ const VideoChat = ({
             className="hp-bar local"
             style={{ width: `${player1Percentage}%` }}
           >
-            Player 1 HP: {player1HP}
+            <span className="player-name">{hostStats.name}</span>
+            <span className="player-hp">HP: {player1HP}</span>
           </div>
         </div>
         {lastResult && (
           <div className="result-box">
-            <img src={localImage} width="80" height="80" alt="Local Gesture" />
-            <p>Round: {lastResult.round}</p>
-            <p>{lastResult.result}</p>
-            <img
-              src={remoteImage}
-              width="80"
-              height="80"
-              alt="Remote Gesture"
-            />
+            <div className="round">Round: {lastResult.round}</div>
+            <div className="local">
+              <img src={localImage} alt="Local Gesture" />
+            </div>
+            <div className="result">
+              <p>{lastResult.result}</p>
+            </div>
+            <div className="remote">
+              <img src={remoteImage} alt="Remote Gesture" />
+            </div>
           </div>
         )}
         <div className="video-bottom">
@@ -387,7 +375,8 @@ const VideoChat = ({
             className="hp-bar remote"
             style={{ width: `${player2Percentage}%` }}
           >
-            Player 2 HP: {player2HP}
+            <span className="player-name">{peerStats.name}</span>
+            <span className="player-hp">HP: {player2HP}</span>
           </div>
         </div>
         <div className="canvas-container">
@@ -411,7 +400,6 @@ const VideoChat = ({
             Connect
           </button>
         </div>
-        {/* <br></br> */}
         <button
           onClick={handleCountdownButtonClick}
           disabled={isCountdownActive}
@@ -420,8 +408,6 @@ const VideoChat = ({
         </button>
         {isCountdownActive && <p>Sending in {countdownTime}...</p>}
       </div>
-
-      <div id="gesture_output"></div>
 
       <table className="table-container">
         <thead className="title">
@@ -460,9 +446,6 @@ const VideoChat = ({
         />
         <button onClick={sendMessage}>Send</button>
       </div>
-      {/* {showRematchButton && (
-        <button onClick={handleRematchButtonClick}>Rematch</button>
-      )} */}
     </div>
   );
 };

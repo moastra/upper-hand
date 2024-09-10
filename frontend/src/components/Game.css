@@ -13,31 +13,49 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow for better visibility */
 }
 .popup.gameover {
-  top: 45%; /* Adjust the distance from the top */
+  position: fixed;
+  top: 44%;
   left: 50%;
-  transform: translate(
-    -50%,
-    -50%
-  ); /* Center both horizontally and vertically */
-  text-align: center;
+  transform: translate(-50%, -50%); /* Center vertically and horizontally */
+  width: 300px;
+  height: 300px;
+  border-radius: 50%; /* Make it a circle */
+  box-shadow: inset 0 0 50px #2e2a7b, inset 20px 0 80px #4b2d77,
+    inset -20px 0 80px #4b2d77, inset 20px 0 300px #2e2a7b,
+    inset -20px 0 300px #2e2a7b, 0 0 50px #2e2a7b, -10px 0 80px #4b2d77,
+    10px 0 80px #4b2d77; /* Add inner and outer shadows */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  text-align: center; /* Center text alignment */
+  color: #fff; /* Set text color to white or adjust as needed */
 }
 .power-ups {
-  position: fixed;
-  top: 14%; /* Adjust the distance from the top */
-  left: 23%;
+  position: absolute;
+  text-align: center;
+  top: 16%; /* Adjust the distance from the top */
+  left: 24%;
   width: 30%;
+  color: blue;
+  text-shadow: 0 0 2px #00ffff, 0 0 3px #00ffff, 0 0 4px #00bcd4,
+    0 0 5px #00bcd4, 0 0 6px #00838f, 0 0 7px #00838f, 0 0 8px #00838f; /* Deepest aqua shadow for a strong glow */
 }
 .power-up {
-  background: #f9f9f9;
+  background-color: #fff;
+  border: solid 2px #fff;
+  box-shadow: inset 60px 0 120px #a2c5ac, inset -60px 0 120px #cde6f5;
+
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 10px;
   width: 45%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Optional: Add a margin to create a gap between power-ups */
+}
+.power-up p {
+  color: white;
 }
 .player2-power-up {
-  margin-top: 82%;
+  margin-top: 86%;
 }
 .power-up h3 {
   margin-top: 0;
@@ -45,7 +63,7 @@
 
 .player1-container {
   position: absolute;
-  top: 10%;
+  top: 12.5%;
   right: 15%;
 }
 

@@ -21,9 +21,13 @@ const sessionAuth = (authHelpers) => {
       }
 
       //JWT token
-      const token = jwt.sign({ userId: userRecord.id, username: userRecord.username }, SECRET_KEY, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId: userRecord.id, username: userRecord.username },
+        SECRET_KEY,
+        {
+          expiresIn: "5h",
+        }
+      );
 
       return res.status(200).json({ token, username: userRecord.username });
     } catch (error) {
@@ -70,9 +74,13 @@ const sessionAuth = (authHelpers) => {
         webcam,
       });
 
-      const token = jwt.sign({ userId: insertQueryResult.id, username: userRecord.username }, SECRET_KEY, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId: insertQueryResult.id, username: userRecord.username },
+        SECRET_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
 
       //add jwt.verify? - for secret adminny stuff
 
@@ -85,8 +93,7 @@ const sessionAuth = (authHelpers) => {
     }
   });
 
-
-  router.post('/loginregister', async (req, res) => {
+  router.post("/loginregister", async (req, res) => {
     const { action, username, email, password, avatar, webcam } = req.body;
 
     try {
@@ -153,7 +160,6 @@ const sessionAuth = (authHelpers) => {
       return res.status(500).json({ message: error.message });
     }
   });
-
 
   return router;
 };

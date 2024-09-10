@@ -12,6 +12,20 @@ const customizeHelpers = (db) => {
     return stats.rows[0];
   };
 
+  const getUsernameById = async (userId) => {
+    const user = await db.query("SELECT username FROM users WHERE ID = $1", [
+      userId,
+    ]);
+
+    if (!user.rows.length) {
+      throw new Error("User not found");
+    }
+
+    const userRecord = user.rows[0];
+    console.log("user records;", userRecord);
+    return userRecord;
+  };
+
   const getUserPowerUps = async (userId) => {
     // active powerup
     const powerUps = await db.query(
@@ -65,6 +79,7 @@ const customizeHelpers = (db) => {
   };
 
   return {
+    getUsernameById,
     getUserStats,
     getUserPowerUps,
     getUserStorage,

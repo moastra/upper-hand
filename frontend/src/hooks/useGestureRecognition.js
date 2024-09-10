@@ -77,21 +77,22 @@ const useGestureRecognition = (videoRef, canvasRef) => {
                 }
               }
 
-              const gestureOutput = document.getElementById("gesture_output");
-              if (gestureOutput) {
-                if (results.gestures.length > 0) {
-                  const categoryName = results.gestures[0][0].categoryName;
-                  const categoryScore = parseFloat(
-                    results.gestures[0][0].score * 100
-                  ).toFixed(2);
-                  const handedness = results.handednesses[0][0].displayName;
-                  gestureOutput.innerText = `Gesture: ${categoryName}\nConfidence: ${categoryScore}%\nHandedness: ${handedness}`;
-                  gestureOutput.style.display = "block";
-                  setGestureData(categoryName);
-                } else {
-                  gestureOutput.style.display = "none";
-                }
+              // const gestureOutput = document.getElementById("gesture_output");
+              // if (gestureOutput) {
+              if (results.gestures.length > 0) {
+                const categoryName = results.gestures[0][0].categoryName;
+                // const categoryScore = parseFloat(
+                //   results.gestures[0][0].score * 100
+                // ).toFixed(2);
+                // const handedness = results.handednesses[0][0].displayName;
+                // gestureOutput.innerText = `Gesture: ${categoryName}\nConfidence: ${categoryScore}%\nHandedness: ${handedness}`;
+                // gestureOutput.style.display = "block";
+                setGestureData(categoryName);
               }
+              // else {
+              //     gestureOutput.style.display = "none";
+              //   }
+              // }
             } catch (error) {
               console.error("Error recognizing gesture:", error);
             }

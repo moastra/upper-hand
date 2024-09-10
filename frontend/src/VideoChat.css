@@ -71,7 +71,12 @@
   align-items: center;
   margin: 1rem;
   z-index: 10; /* Ensure controls are above video */
-  background-color: rgba(255, 255, 255, 0); /* Optional: background for readability */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0
+  ); /* Optional: background for readability */
   /* padding: 1rem; */
   border-radius: 8px;
 }
@@ -106,16 +111,6 @@
   cursor: not-allowed;
 }
 
-#gesture_output {
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 300px;
-  text-align: center;
-}
-
 /* Centered result box */
 .result-box {
   position: fixed;
@@ -123,7 +118,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
-  height: 150px;
+  height: 200px;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -131,9 +126,30 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   text-align: center;
   font-size: 1.5rem;
-  z-index: 5; /* Ensure result box is above videos */
+  z-index: 5;
+  box-sizing: border-box; /* Include padding in width and height */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
 }
 
+.result-box img {
+  margin: 0 10px; /* Space between images and text */
+  width: 80px;
+  height: 80px;
+}
+.result-box .round {
+  position: fixed;
+  left: 3px;
+  top: 3px;
+  font-size: 12pt;
+}
+.result-box p {
+  margin: 0 15px; /* Space between text and images */
+  font-size: 1em; /* Adjust font size as needed */
+  text-align: center; /* Center text */
+}
 .video-hidden {
   display: none;
 }
@@ -245,21 +261,28 @@
 }
 
 .hp-bar {
-  position: absolute;
-  width: 100%; /* Full width of the parent container */
-  text-align: center;
-  font-weight: bold;
+  display: flex;
+  justify-content: space-between; /* Space out the name and HP */
+  align-items: center; /* Center align vertically */
+  height: 20px;
   color: white;
-  background-color: red;
-  padding: 5px;
-  box-sizing: border-box; /* Include padding in width calculation */
-  overflow: hidden; /* Ensure text stays within the bar */
+  text-align: center;
+  padding: 0 10px; /* Add padding for better spacing */
+  box-sizing: border-box; /* Ensure padding does not affect width */
 }
+
 .hp-bar.local {
-  top: 10px;
   background-color: green;
 }
+
 .hp-bar.remote {
   background-color: blue;
-  bottom: 10px;
+}
+
+.player-name {
+  flex: 1; /* Allow name to take available space */
+}
+
+.player-hp {
+  margin-left: auto; /* Push HP value to the far right */
 }

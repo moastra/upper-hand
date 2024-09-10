@@ -56,10 +56,10 @@ const Game = ({
     const fetchData = async () => {
       try {
         const data = await fetchCustomizationData();
-        const { stats, powerUps } = data;
-        console.log("power ups", powerUps);
+        const { name, stats, powerUps } = data;
+        console.log("name", name);
         const initPlayer = {
-          name: "Player 1",
+          name: name.username,
           hp: stats.hp,
           attack: stats.atk,
           defense: stats.def,
@@ -264,8 +264,10 @@ const Game = ({
         <div className="popup gameover">
           <h2>Game Over!</h2>
           <p>{winner === "Draw" ? "It's a draw!" : `${winner} wins!`}</p>
-          <button onClick={handleRematch}>Rematch</button>
-          <button onClick={handleDisconnect}>Disconnect</button>
+          <div>
+            <button onClick={handleRematch}>Rematch</button>
+            <button onClick={handleDisconnect}>Disconnect</button>
+          </div>
         </div>
       )}
     </div>
