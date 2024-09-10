@@ -113,7 +113,6 @@ const Game = ({
       checkPatterns(player1Choices, setPlayer1, appliedPatterns1);
     const { updatedPatterns: patterns2, patternMessages: messages2 } =
       checkPatterns(player2Choices, setPlayer2, appliedPatterns2);
-
     setAppliedPatterns1(patterns1);
     setAppliedPatterns2(patterns2);
 
@@ -122,7 +121,8 @@ const Game = ({
       setPatternMessages(messages1);
       setShowPopup(true);
     }
-
+    console.log("player1 choice", player1Choices);
+    console.log("player2 choice", player2Choices);
     setProcessingComplete(true);
   }, [player1Choices, player2Choices]);
 
@@ -155,9 +155,9 @@ const Game = ({
           result === "Lose"
             ? updatePlayerHP(
                 prev.hp,
-                player1.attack,
-                player2.defense,
-                player1.multiplier
+                player2.attack,
+                player1.defense,
+                player2.multiplier
               )
             : prev.hp,
       }));
