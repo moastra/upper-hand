@@ -7,15 +7,18 @@ const { Server } = require('socket.io');
 
 const port = process.env.PORT || 3001;
 
+
 const db = require('./db');
 const dbHelpers = require('./db/helpers/dbHelpers')(db);
 const authHelpers = require('./db/helpers/authHelpers')(db);
 const customizeHelpers = require('./db/helpers/customizeHelpers')(db);
+const matchHelper = require('./db/helpers/matchHelpers')(db);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const sessionAuth = require('./routes/sessionAuth');
 const customize = require('./routes/customize');
+const matches = require('./routes/matches');
 var app = express();
 
 
@@ -29,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api', sessionAuth(authHelpers)); //Login-Logout post routes
 app.use('/api', customize(customizeHelpers)); //Customize - stats routes
+app.use('/api', matches(matchHelper)); // match history - routes
 app.use('/api/users', usersRouter(dbHelpers));
 
 const http = app.listen(port, () => {

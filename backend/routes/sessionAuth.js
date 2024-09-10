@@ -16,14 +16,13 @@ const sessionAuth = (authHelpers) => {
       const isMatch = await bcrypt.compare(password, userRecord.password);
 
       if (!isMatch) {
-        console.log(userRecord, isMatch);
         return res
           .status(400)
           .json({ message: "Invalid username or password " });
       }
 
       //JWT token
-      const token = jwt.sign({ userId: userRecord.id }, SECRET_KEY, {
+      const token = jwt.sign({ userId: userRecord.id, username: userRecord.username }, SECRET_KEY, {
         expiresIn: "1h",
       });
 
@@ -72,7 +71,7 @@ const sessionAuth = (authHelpers) => {
         webcam,
       });
 
-      const token = jwt.sign({ userId: insertQueryResult.id }, SECRET_KEY, {
+      const token = jwt.sign({ userId: insertQueryResult.id, username: userRecord.username }, SECRET_KEY, {
         expiresIn: "1h",
       });
 
@@ -86,6 +85,7 @@ const sessionAuth = (authHelpers) => {
       return res.status(500).json({ message: error.message });
     }
   });
+
 
   router.post('/loginregister', async (req, res) => {
     const { action, username, email, password, avatar, webcam } = req.body;
@@ -146,6 +146,7 @@ const sessionAuth = (authHelpers) => {
       return res.status(500).json({ message: error.message });
     }
   });
+
 
   return router;
 };
