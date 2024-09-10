@@ -200,6 +200,13 @@
   flex-direction: column;
   overflow: hidden;
   z-index: 1000; /* Ensures the chat is above other elements */
+  transition: height 0.3s ease; /* Smooth transition for minimize */
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chat-section h3 {
@@ -258,6 +265,31 @@
   padding: 5px;
   border: 1px solid #ddd;
   margin-bottom: 10px;
+}
+
+.chat-section .minimize-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+
+.minimize-icon {
+  width: 20px;
+  height: 25px;
+}
+
+.minimized {
+  height: 50px;
+}
+
+.minimized .chat-content {
+  display: none; /* Hide chat messages and input when minimized */
 }
 
 .hp-bar {

@@ -5,7 +5,7 @@ import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 import { createPeer, getPeerId } from "./peerHelper";
 import { handleDisconnect } from "./utility/disconnectHelper";
-
+import minimize from "./image/minimize-icon.png";
 const VideoChat = ({
   onGameResult,
   playerStats,
@@ -42,6 +42,8 @@ const VideoChat = ({
     localVideoRef,
     canvasRef
   );
+
+  const [isMinimized, setIsMinimized] = useState(false);
 
   const [player1HP, setPlayer1HP] = useState(null);
   const [player2HP, setPlayer2HP] = useState(null);
@@ -338,6 +340,9 @@ const VideoChat = ({
     }
   }, [dataConnection, peerStats]);
 
+  const toggleChat = () => {
+    setIsMinimized(!isMinimized);
+  };
   return (
     <div className="container">
       <div className="video-sections">
@@ -430,21 +435,32 @@ const VideoChat = ({
         </tbody>
       </table>
 
-      <div className="chat-section">
-        <h3>Chat</h3>
-        {chat.map((chatItem, index) => (
-          <p key={index}>
-            <b>{chatItem.from}:</b> {chatItem.message}
-          </p>
-        ))}
-        <input
-          type="text"
-          placeholder="Type a message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button onClick={sendMessage}>Send</button>
+      <div className={`chat-section ${isMinimized ? "minimized" : ""}`}>
+        <button onClick={toggleChat} className="minimize-button">
+          <img src={minimize} alt="Minimize" className="minimize-icon" />
+        </button>
+        <div className="chat-header">
+          <h3>Chat</h3>
+        </div>
+        {!isMinimized && (
+          <>
+            <div className="chat-messages">
+              {chat.map((chatItem, index) => (
+                <p key={index}>
+                  <b>{chatItem.from}:</b> {chatItem.message}
+                </p>
+              ))}
+            </div>
+            <input
+              type="text"
+              placeholder="Type a message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <button onClick={sendMessage}>Send</button>
+          </>
+        )}
       </div>
     </div>
   );
