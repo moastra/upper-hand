@@ -59,6 +59,7 @@ const ChatVideo = () => {
           onDisconnect={handleDisconnect}
           onRematch={handleRematch}
           response={response}
+          onResponse={handleResponse}
           onHostStats={handleHost}
           peerStats={peerStats}
         />

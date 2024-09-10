@@ -47,7 +47,7 @@ const VideoChat = ({
   const [player2HP, setPlayer2HP] = useState(null);
   const player1InitialHP = 360;
   const player2InitialHP = 300;
-
+  const peerStatRef = useRef("");
   useEffect(() => {
     if (playerStats.player1 && playerStats.player2) {
       setPlayer1HP(playerStats.player1.hp);
@@ -90,9 +90,8 @@ const VideoChat = ({
         } else if (data.type === "disconnect") {
           disconnect();
         } else if (data.type === "stats") {
-          console.log("line 92 received stats", data.stats);
           onPeerStats(data.stats);
-          console.log("line 96 sending stats", hostStats);
+          peerStatRef.current = data.stats;
         } else {
           setChat((prevChat) => [...prevChat, { message: data, from: "Peer" }]);
         }
@@ -184,7 +183,6 @@ const VideoChat = ({
           } else if (data.type === "rematch") {
             resetForRematch();
           } else if (data.type === "stats") {
-            console.log("line 177 received stats", data.stats);
             onPeerStats(data.stats);
           } else {
             setChat((prevChat) => [
@@ -329,7 +327,7 @@ const VideoChat = ({
     );
     gestureDataRef.current = "";
     setRemoteData("");
-
+    onPeerStats("");
     setGameResult([]); // Ensure game result is cleared
     onGameResult([]); // Notify parent component about the reset
     onResponse(true);
@@ -358,13 +356,11 @@ const VideoChat = ({
   };
 
   useEffect(() => {
-    sendingStats();
-    console.log("sending stats using effect");
+    if (peerStats === peerStatRef.current) {
+      sendingStats();
+      console.log("sending stats using effect");
+    }
   }, [dataConnection, peerStats]);
-
-  useEffect(() => {
-    console.log("line 374 Data connection is:", dataConnection);
-  }, [dataConnection]);
 
   return (
     <div className="container">

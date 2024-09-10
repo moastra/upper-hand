@@ -21,6 +21,7 @@ const Game = ({
   onDisconnect,
   onRematch,
   response,
+  onResponse,
   onHostStats,
   peerStats,
 }) => {
@@ -56,16 +57,18 @@ const Game = ({
       try {
         const data = await fetchCustomizationData();
         const { stats, powerUps } = data;
-
-        setInitialPlayerState({
+        console.log("power ups", powerUps);
+        const initPlayer = {
           name: "Player 1",
           hp: stats.hp,
           attack: stats.atk,
           defense: stats.def,
           multiplier: 1,
-          powerUp: powerUps.id || 1,
-        });
-        console.log("set data", data);
+          powerUp: powerUps[0].id,
+        };
+        const player1WithPowerUp = applyPowerUp(initPlayer, initPlayer.powerUp);
+        setInitialPlayerState(player1WithPowerUp);
+        console.log(player1WithPowerUp);
       } catch (error) {
         console.log("error");
       }
@@ -84,22 +87,6 @@ const Game = ({
       setPlayer2(peerStats);
     }
   }, [peerStats]);
-
-  if (!powerUpApplied.player1 && player1.powerUp) {
-    applyPowerUp(setPlayer1, player1.powerUp);
-    setPowerUpApplied((prev) => ({
-      ...prev,
-      player1: true,
-    }));
-  }
-
-  if (!powerUpApplied.player2 && player2.powerUp) {
-    applyPowerUp(setPlayer2, player2.powerUp);
-    setPowerUpApplied((prev) => ({
-      ...prev,
-      player2: true,
-    }));
-  }
 
   useEffect(() => {
     if (initialGameResult.length === 0) return;
@@ -203,11 +190,7 @@ const Game = ({
 
   const resetGameState = () => {
     setPlayer1(initialPlayerState);
-    setPlayer2({
-      ...initialPlayerState,
-      name: "Player 2",
-      powerUp: 2,
-    });
+    setPlayer2(peerStats);
     setPlayer1Choices({ Rock: 0, Paper: 0, Scissors: 0 });
     setPlayer2Choices({ Rock: 0, Paper: 0, Scissors: 0 });
     setAppliedPatterns1(new Set());
@@ -247,6 +230,7 @@ const Game = ({
         player1: { ...player1 },
         player2: { ...player2 },
       });
+      onResponse(false);
     }
   }, [response]);
   return (
