@@ -10,6 +10,8 @@ const ChatVideo = () => {
   const [rematch, setRematch] = useState(false);
   const [disconnect, setDisconnect] = useState(false);
   const [response, setResponse] = useState(false);
+  const [hostStats, setHostStats] = useState("");
+  const [peerStats, setPeerStats] = useState("");
 
   const handleGameResult = (result) => {
     setGameResult(result);
@@ -27,7 +29,15 @@ const ChatVideo = () => {
   const handleResponse = (boolean) => {
     setResponse(boolean);
   };
-
+  const handleHost = (stats) => {
+    setHostStats(stats);
+  };
+  const handlePeer = (stats) => {
+    setPeerStats(stats);
+    console.log("setting peer stats");
+  };
+  console.log("peerStats：", peerStats);
+  console.log("hostStats", hostStats);
 
   return (
     <div>
@@ -40,6 +50,9 @@ const ChatVideo = () => {
         onDisconnect={handleDisconnect}
         disconnected={disconnect}
         onResponse={handleResponse}
+        onPeerStats={handlePeer}
+        hostStats={hostStats}
+        peerStats={peerStats}
       />
       {gameResult && (
         <Game
@@ -48,6 +61,9 @@ const ChatVideo = () => {
           onDisconnect={handleDisconnect}
           onRematch={handleRematch}
           response={response}
+          onResponse={handleResponse}
+          onHostStats={handleHost}
+          peerStats={peerStats}
         />
       )}
 

@@ -3,4 +3,4 @@ INSERT INTO storages (power_up_id, user_id, active) VALUES
 (2, 2, TRUE), 
 (3, 3, TRUE),  
 (4, 1, FALSE),
-(5, 2, TRUE);
+(5, 2, FALSE);

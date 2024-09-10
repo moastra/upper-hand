@@ -13,6 +13,9 @@ const VideoChat = ({
   disconnected,
   onDisconnect,
   onResponse,
+  onPeerStats,
+  hostStats,
+  peerStats,
 }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -42,9 +45,9 @@ const VideoChat = ({
 
   const [player1HP, setPlayer1HP] = useState(null);
   const [player2HP, setPlayer2HP] = useState(null);
-  const player1InitialHP = 360;
-  const player2InitialHP = 300;
-
+  const player1InitialHP = hostStats.hp;
+  const player2InitialHP = peerStats.hp;
+  const peerStatRef = useRef("");
   useEffect(() => {
     if (playerStats.player1 && playerStats.player2) {
       setPlayer1HP(playerStats.player1.hp);
@@ -86,6 +89,9 @@ const VideoChat = ({
           resetForRematch();
         } else if (data.type === "disconnect") {
           disconnect();
+        } else if (data.type === "stats") {
+          onPeerStats(data.stats);
+          peerStatRef.current = data.stats;
         } else {
           setChat((prevChat) => [...prevChat, { message: data, from: "Peer" }]);
         }
@@ -157,22 +163,6 @@ const VideoChat = ({
           //     remoteplayerStats: playerData,
           //   });
           // }
-          conn.on("data", (data) => {
-            if (data.type === "gestureData") {
-              setRemoteData(data.gestureData);
-              console.log("line 92 set remote gesture data:", data.gestureData);
-              setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
-            } else if (data.type === "disconnect") {
-              disconnect();
-            } else if (data.type === "rematch") {
-              resetForRematch();
-            } else {
-              setChat((prevChat) => [
-                ...prevChat,
-                { message: data, from: "Peer" },
-              ]);
-            }
-          });
         });
         conn.on("error", (err) => {
           console.error("Connection error:", err);
@@ -183,6 +173,27 @@ const VideoChat = ({
           setDataConnection(null);
         });
 
+        conn.on("data", (data) => {
+          if (data.type === "startCountdown") {
+            setRemoteCountdownStarted(true); // added
+            setIsCountdownActive(true);
+          } else if (data.type === "gestureData") {
+            setRemoteData(data.gestureData);
+            console.log("line 92 set remote gesture data:", data.gestureData);
+            setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
+          } else if (data.type === "disconnect") {
+            disconnect();
+          } else if (data.type === "rematch") {
+            resetForRematch();
+          } else if (data.type === "stats") {
+            onPeerStats(data.stats);
+          } else {
+            setChat((prevChat) => [
+              ...prevChat,
+              { message: data, from: "Peer" },
+            ]);
+          }
+        });
         setConnected(true);
       });
   };
@@ -217,12 +228,11 @@ const VideoChat = ({
   });
 
   const handleCountdownButtonClick = () => {
-    setIsCountdownActive(true);
-    setCountdownStarted(true);
-
     if (dataConnection && dataConnection.open) {
       dataConnection.send({ type: "startCountdown" });
     }
+    setIsCountdownActive(true);
+    setCountdownStarted(true);
   };
 
   // Evaluate gestures from both players and determine winner
@@ -286,8 +296,6 @@ const VideoChat = ({
     setRounds(0);
     gestureDataRef.current = "";
     setRemoteData("");
-
-    setGameResult([]); // Ensure game result is cleared
     onGameResult([]); // Notify parent component about the reset
     onResponse(true);
     onRematch(false);
@@ -319,7 +327,7 @@ const VideoChat = ({
     );
     gestureDataRef.current = "";
     setRemoteData("");
-
+    onPeerStats("");
     setGameResult([]); // Ensure game result is cleared
     onGameResult([]); // Notify parent component about the reset
     onResponse(true);
@@ -336,6 +344,23 @@ const VideoChat = ({
       disconnect();
     }
   }, [disconnected]);
+
+  const sendingStats = () => {
+    if (dataConnection && dataConnection.open) {
+      console.log("Data connection status:", dataConnection?.open);
+      console.log("Sending host stats:", hostStats);
+      dataConnection.send({ type: "stats", stats: hostStats });
+    } else {
+      console.error("Data connection is not open");
+    }
+  };
+
+  useEffect(() => {
+    if (peerStats === peerStatRef.current) {
+      sendingStats();
+      console.log("sending stats using effect");
+    }
+  }, [dataConnection, peerStats]);
 
   return (
     <div className="container">

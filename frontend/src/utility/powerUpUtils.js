@@ -9,28 +9,36 @@ const powerUps = {
     description: "Increases ATK by 15",
     effect: 15, // Increase attack by 15
   },
+  3: {
+    name: "Defense Boost",
+    description: "Increases DEF by 10",
+    effect: 10,
+  },
 };
 
-export const applyPowerUp = (setPlayer, powerUpId) => {
+export const applyPowerUp = (player, powerUpId) => {
   const powerUp = powerUps[powerUpId];
 
-  if (powerUp) {
-    setPlayer((prev) => {
-      switch (powerUpId) {
-        case 1: // Health Boost
-          return {
-            ...prev,
-            hp: prev.hp + prev.hp * powerUp.effect, // Increase HP by 20%
-          };
-        case 2: // Attack Boost
-          return {
-            ...prev,
-            attack: prev.attack + powerUp.effect, // Increase attack by 15
-          };
-        default:
-          return prev;
-      }
-    });
+  if (!powerUp) return player;
+
+  switch (powerUpId) {
+    case 1: // Health Boost
+      return {
+        ...player,
+        hp: player.hp + player.hp * powerUp.effect, // Increase HP by percentage
+      };
+    case 2: // Attack Boost
+      return {
+        ...player,
+        attack: player.attack + powerUp.effect, // Increase attack by amount
+      };
+    case 3: // Defense Boost
+      return {
+        ...player,
+        defense: player.defense + powerUp.effect, // Increase defense by amount
+      };
+    default:
+      return player;
   }
 };
 
