@@ -3,6 +3,7 @@ import VideoChat from "../VideoChat";
 import React, { useState } from "react";
 import Game from "./Game";
 
+
 const ChatVideo = () => {
   const [gameResult, setGameResult] = useState("");
   const [playerStats, setPlayerStats] = useState({ player1: {}, player2: {} });
@@ -37,6 +38,7 @@ const ChatVideo = () => {
   };
   console.log("peerStats：", peerStats);
   console.log("hostStats", hostStats);
+
   return (
     <div>
       <Outlet />
@@ -64,6 +66,8 @@ const ChatVideo = () => {
           peerStats={peerStats}
         />
       )}
+
+
     </div>
   );
 };

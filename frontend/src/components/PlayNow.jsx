@@ -6,10 +6,12 @@ const PlayNow = () => {
     <div className="playnow-container">
       <h2>Play Now</h2>
       <div className="playnow-buttons">
-        <Link to="/findmatch">Find Match</Link>
-        <br />
-        <Link to="/localgame">Local Game</Link>
-      </div>
+      <Link to="/findmatch">Find Match </Link>
+      <br />
+      <Link to="/localgame">Local Game </Link>
+      <br />
+      <Link to="/matchhistory">Match History</Link>
+    </div>
     </div>
   );
 };

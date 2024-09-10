@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Settings from "./components/Settings";
@@ -16,8 +16,10 @@ import Chat from "./components/ChatLayout";
 import Home from "./components/notLoggedInHome";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import Customize from "./components/Customize";
-import Homepage from "./components/Homepage";
+import MatchHistory from "./components/MatchHistory";
 import LoginRegister from "./components/LoginRegister"
+import Homepage from "./components/Homepage";
+
 
 const App = () => {
   return (
@@ -43,6 +45,7 @@ const App = () => {
           <Route path="/customize" element={<Customize />} />
           <Route path="/accountdetails" element={<AccountDetails />} />
           <Route path="/setavatar" element={<SetAvatar />} />
+          <Route path="/matchhistory" element={<MatchHistory />} />
 
 {/* All stuff which only needs chat function */}
           <Route element={<Chat />}>

@@ -1,37 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-
-// const socket = io('http://localhost:3001');
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
 
 const LobbyChat = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState();
 
   useEffect(() => {
     const socket = io();
     setSocket(socket);
-
-    socket.on('chatMessage', (msg) => {
+    socket.on("chatMessage", (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
 
-    return () => {
-      socket.off('chatMessage');
-    };
+    return () => socket.off("chatMessage");
   }, []);
 
   const sendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
-      socket.emit('chatMessage', message);
-      setMessage('');
+      socket.emit("chatMessage", message);
+      setMessage("");
     }
   };
 
   // Function to handle Enter key press
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       sendMessage(e);
     }
@@ -62,7 +57,6 @@ const LobbyChat = () => {
 };
 
 export default LobbyChat;
-
 
 // import React, { useState, useEffect } from 'react';
 // import io from 'socket.io-client';
@@ -114,3 +108,5 @@ export default LobbyChat;
 // };
 
 // export default Chat;
+
+// Prob make as layout and then bring in children for which it concerns

@@ -1,4 +1,4 @@
-* Ensure the container takes up the full viewport height */
+/* Ensure the container takes up the full viewport height */
 .container {
   display: flex;
   flex-direction: column;
