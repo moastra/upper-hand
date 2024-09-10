@@ -45,8 +45,8 @@ const VideoChat = ({
 
   const [player1HP, setPlayer1HP] = useState(null);
   const [player2HP, setPlayer2HP] = useState(null);
-  const player1InitialHP = 360;
-  const player2InitialHP = 300;
+  const player1InitialHP = hostStats.hp;
+  const player2InitialHP = peerStats.hp;
   const peerStatRef = useRef("");
   useEffect(() => {
     if (playerStats.player1 && playerStats.player2) {
@@ -294,8 +294,6 @@ const VideoChat = ({
     setRounds(0);
     gestureDataRef.current = "";
     setRemoteData("");
-
-    setGameResult([]); // Ensure game result is cleared
     onGameResult([]); // Notify parent component about the reset
     onResponse(true);
     onRematch(false);
