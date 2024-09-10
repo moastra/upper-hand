@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import '../styles/Dashboard.css';
+// import '../styles/Dashboard.css';
+import '../styles/Common.css';
 
 const Dashboard = () => {
   return (
-    <div className="dashboard-container">
+    <div className="heading-container">
       <h2>Dashboard</h2>
-      <div className="dashboard-buttons">
+      <div className="buttons-container">
       <Link to="/playnow">Play Now</Link>
       <Link to="/settings">Settings</Link>
       <Link to="/customize">Customize</Link>

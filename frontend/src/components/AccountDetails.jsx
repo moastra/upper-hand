@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import '../styles/AccountDetails.css'
+// import '../styles/AccountDetails.css'
+import '../styles/Common.css';
+import { Link } from "react-router-dom";
 
 const AccountDetails = () => {
   const [isEmailOpen, setIsEmailOpen] = useState(false);
@@ -27,11 +29,11 @@ const AccountDetails = () => {
   };
 
   return (
-    <div>
+    <div className="heading-container">
       <h2>Account Details</h2>
 
       {/* Button to toggle email update */}
-      <button onClick={() => setIsEmailOpen(!isEmailOpen)}>Update Email</button>
+      <Link onClick={() => setIsEmailOpen(!isEmailOpen)} className="buttons-container">Update Email</Link>
 
       {/* Email Update Form */}
       {isEmailOpen && (
@@ -45,16 +47,16 @@ const AccountDetails = () => {
               required
             />
           </div>
-          <button type="submit">Save Email</button>
+          <Link type="submit" className="Link-container">Save Email</Link>
         </form>
       )}
 
       <br />
 
       {/* Button to toggle password change */}
-      <button onClick={() => setIsPasswordOpen(!isPasswordOpen)}>
+      <Link onClick={() => setIsPasswordOpen(!isPasswordOpen)} className="buttons-container">
         Change Password
-      </button>
+      </Link>
 
       {/* Password Change Form */}
       {isPasswordOpen && (
@@ -86,7 +88,7 @@ const AccountDetails = () => {
               required
             />
           </div>
-          <button type="submit">Save Password</button>
+          <Link type="submit" className="buttons-container">Save Password</Link>
         </form>
       )}
     </div>

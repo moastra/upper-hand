@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
+import '../styles/Common.css';
 
 const Settings = () => {
 
   return (
-    <div>
-      <h2>Settings Componnents</h2>
-      <Link to="/setavatar">Set Avatar </Link>
-      <br />
-      <Link to="/accountdetails">Account Details </Link>
-      <br />
-      <Link to="/privacy">Privacy </Link>
+    <div className="heading-container">
+      <h2>Settings</h2>
+      <div className="buttons-container">
+        <Link to="/setavatar">Set Avatar</Link>
+        <Link to="/accountdetails">Account</Link>
+        <Link to="/privacy">Privacy</Link>
+      </div>
     </div>
   );
 
