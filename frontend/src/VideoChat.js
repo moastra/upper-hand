@@ -36,7 +36,6 @@ const VideoChat = ({
   const remoteVideoRef = useRef(null);
   const canvasRef = useRef(null);
   const peerInstance = useRef(null); // Hold the peer instance for both video and chat
-  const connInstance = useRef(null); // Connection for chat messages
   const gestureDataRef = useRef(""); // Use a ref to store the gesture data
   const { gestureData, isLoading } = useGestureRecognition(
     localVideoRef,
@@ -75,7 +74,6 @@ const VideoChat = ({
 
     peerInstance.current.on("connection", (conn) => {
       setDataConnection(conn);
-      connInstance.current = conn; // Store connection instance for chat
 
       // Handle incoming chat and game data
       conn.on("data", (data) => {
@@ -155,14 +153,6 @@ const VideoChat = ({
         conn.on("open", () => {
           setConnectedPeerId(remotePeerId);
           setDataConnection(conn);
-          connInstance.current = conn;
-          // Send initial player data to peer
-          // if (conn.open) {
-          //   conn.send({
-          //     type: "initialPlayerData",
-          //     remoteplayerStats: playerData,
-          //   });
-          // }
         });
         conn.on("error", (err) => {
           console.error("Connection error:", err);
@@ -199,8 +189,8 @@ const VideoChat = ({
   };
 
   const sendMessage = () => {
-    if (connInstance.current && message) {
-      connInstance.current.send(message);
+    if (dataConnection.open && message) {
+      dataConnection.send(message);
       setChat((prevChat) => [...prevChat, { message, from: "Me" }]);
       setMessage("");
     }
