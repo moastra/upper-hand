@@ -13,6 +13,9 @@ const VideoChat = ({
   disconnected,
   onDisconnect,
   onResponse,
+  onPeerStats,
+  hostStats,
+  peerStats,
 }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -86,6 +89,10 @@ const VideoChat = ({
           resetForRematch();
         } else if (data.type === "disconnect") {
           disconnect();
+        } else if (data.type === "stats") {
+          console.log("line 92 received stats", data.stats);
+          onPeerStats(data.stats);
+          console.log("line 96 sending stats", hostStats);
         } else {
           setChat((prevChat) => [...prevChat, { message: data, from: "Peer" }]);
         }
@@ -157,22 +164,6 @@ const VideoChat = ({
           //     remoteplayerStats: playerData,
           //   });
           // }
-          conn.on("data", (data) => {
-            if (data.type === "gestureData") {
-              setRemoteData(data.gestureData);
-              console.log("line 92 set remote gesture data:", data.gestureData);
-              setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
-            } else if (data.type === "disconnect") {
-              disconnect();
-            } else if (data.type === "rematch") {
-              resetForRematch();
-            } else {
-              setChat((prevChat) => [
-                ...prevChat,
-                { message: data, from: "Peer" },
-              ]);
-            }
-          });
         });
         conn.on("error", (err) => {
           console.error("Connection error:", err);
@@ -183,6 +174,25 @@ const VideoChat = ({
           setDataConnection(null);
         });
 
+        conn.on("data", (data) => {
+          if (data.type === "gestureData") {
+            setRemoteData(data.gestureData);
+            console.log("line 92 set remote gesture data:", data.gestureData);
+            setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
+          } else if (data.type === "disconnect") {
+            disconnect();
+          } else if (data.type === "rematch") {
+            resetForRematch();
+          } else if (data.type === "stats") {
+            console.log("line 177 received stats", data.stats);
+            onPeerStats(data.stats);
+          } else {
+            setChat((prevChat) => [
+              ...prevChat,
+              { message: data, from: "Peer" },
+            ]);
+          }
+        });
         setConnected(true);
       });
   };
@@ -336,6 +346,25 @@ const VideoChat = ({
       disconnect();
     }
   }, [disconnected]);
+
+  const sendingStats = () => {
+    if (dataConnection && dataConnection.open) {
+      console.log("Data connection status:", dataConnection?.open);
+      console.log("Sending host stats:", hostStats);
+      dataConnection.send({ type: "stats", stats: hostStats });
+    } else {
+      console.error("Data connection is not open");
+    }
+  };
+
+  useEffect(() => {
+    sendingStats();
+    console.log("sending stats using effect");
+  }, [dataConnection, peerStats]);
+
+  useEffect(() => {
+    console.log("line 374 Data connection is:", dataConnection);
+  }, [dataConnection]);
 
   return (
     <div className="container">

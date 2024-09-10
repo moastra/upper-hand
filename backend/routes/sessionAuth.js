@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken"); //outside packages good, dont need to impor
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const sessionAuth = (authHelpers) => {
-  
   router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -24,7 +23,7 @@ const sessionAuth = (authHelpers) => {
 
       //JWT token
       const token = jwt.sign({ userId: userRecord.id }, SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "5h",
       });
 
       return res.status(200).json({ token, username: userRecord.username });
@@ -87,46 +86,51 @@ const sessionAuth = (authHelpers) => {
     }
   });
 
-  router.post('/loginregister', async (req, res) => {
+  router.post("/loginregister", async (req, res) => {
     const { action, username, email, password, avatar, webcam } = req.body;
-  
+
     try {
-      if (action === 'login') {
+      if (action === "login") {
         // Handle login
         const userRecord = await authHelpers.getUserByEmail(email);
-  
+
         const isMatch = await bcrypt.compare(password, userRecord.password);
-  
+
         if (!isMatch) {
-          return res.status(400).json({ message: 'Invalid username or password' });
+          return res
+            .status(400)
+            .json({ message: "Invalid username or password" });
         }
-  
-        const token = jwt.sign({ userId: userRecord.id }, SECRET_KEY, { expiresIn: '1h' });
+
+        const token = jwt.sign({ userId: userRecord.id }, SECRET_KEY, {
+          expiresIn: "1h",
+        });
         return res.status(200).json({ token, username: userRecord.username });
-        
-      } else if (action === 'register') {
+      } else if (action === "register") {
         // Handle registration
         try {
           const existingUser = await authHelpers.getUserByEmail(email);
           if (existingUser) {
-            return res.status(400).json({ message: 'Email already in use' });
+            return res.status(400).json({ message: "Email already in use" });
           }
         } catch (error) {
           // No error - email not in use - proceed
         }
-  
+
         try {
-          const existingUsername = await authHelpers.getUserByUsername(username);
+          const existingUsername = await authHelpers.getUserByUsername(
+            username
+          );
           if (existingUsername) {
-            return res.status(400).json({ message: 'Username already in use' });
+            return res.status(400).json({ message: "Username already in use" });
           }
         } catch (error) {
           // No error - username not in use - proceed
         }
-  
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-  
+
         const insertQueryResult = await authHelpers.createNewUser({
           username,
           hashedPassword,
@@ -134,15 +138,18 @@ const sessionAuth = (authHelpers) => {
           avatar,
           webcam,
         });
-  
-        const token = jwt.sign({ userId: insertQueryResult.id }, SECRET_KEY, { expiresIn: '1h' });
-        return res.status(201).json({ token, username: insertQueryResult.username });
-        
+
+        const token = jwt.sign({ userId: insertQueryResult.id }, SECRET_KEY, {
+          expiresIn: "1h",
+        });
+        return res
+          .status(201)
+          .json({ token, username: insertQueryResult.username });
       } else {
-        return res.status(400).json({ message: 'Invalid action' });
+        return res.status(400).json({ message: "Invalid action" });
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       return res.status(500).json({ message: error.message });
     }
   });

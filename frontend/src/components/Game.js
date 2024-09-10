@@ -4,14 +4,16 @@ import { checkPatterns } from "../utility/roundpattern";
 import "./Game.css";
 import { updatePlayerHP } from "../utility/updatePlayerHp";
 import PowerUpInfo, { applyPowerUp } from "../utility/powerUpUtils";
-const initialPlayerState = {
-  name: "Player 1",
-  hp: 300,
-  attack: 10,
-  defense: 5,
-  multiplier: 1,
-  powerUp: 1,
-};
+import { fetchCustomizationData } from "../utility/fetchCustomizeData";
+
+// const initialPlayerState = {
+//   name: "Player 1",
+//   hp: 300,
+//   attack: 10,
+//   defense: 5,
+//   multiplier: 1,
+//   powerUp: 1,
+// };
 
 const Game = ({
   initialGameResult,
@@ -19,13 +21,11 @@ const Game = ({
   onDisconnect,
   onRematch,
   response,
+  onHostStats,
+  peerStats,
 }) => {
-  const [player1, setPlayer1] = useState(initialPlayerState);
-  const [player2, setPlayer2] = useState({
-    ...initialPlayerState,
-    name: "Player 2",
-    powerUp: 2,
-  });
+  const [player1, setPlayer1] = useState({});
+  const [player2, setPlayer2] = useState({});
   const [player1Choices, setPlayer1Choices] = useState({
     Rock: 0,
     Paper: 0,
@@ -49,6 +49,41 @@ const Game = ({
     player2: false,
   });
   const [showRematchPopup, setShowRematchPopup] = useState(false);
+  const [initialPlayerState, setInitialPlayerState] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCustomizationData();
+        const { stats, powerUps } = data;
+
+        setInitialPlayerState({
+          name: "Player 1",
+          hp: stats.hp,
+          attack: stats.atk,
+          defense: stats.def,
+          multiplier: 1,
+          powerUp: powerUps.id || 1,
+        });
+        console.log("set data", data);
+      } catch (error) {
+        console.log("error");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setPlayer1(initialPlayerState);
+    onHostStats(initialPlayerState);
+  }, [initialPlayerState]);
+
+  useEffect(() => {
+    if (peerStats) {
+      setPlayer2(peerStats);
+    }
+  }, [peerStats]);
 
   if (!powerUpApplied.player1 && player1.powerUp) {
     applyPowerUp(setPlayer1, player1.powerUp);

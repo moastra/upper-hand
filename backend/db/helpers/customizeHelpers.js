@@ -1,5 +1,4 @@
 const customizeHelpers = (db) => {
-
   const getUserStats = async (userId) => {
     const stats = await db.query(
       "SELECT hp, atk, def FROM stats WHERE user_id = $1",
@@ -13,9 +12,10 @@ const customizeHelpers = (db) => {
     return stats.rows[0];
   };
 
-  const getUserPowerUps = async (userId) => {      // active powerup
+  const getUserPowerUps = async (userId) => {
+    // active powerup
     const powerUps = await db.query(
-      `SELECT pu.name, pu.description, pu.effect, pu.value
+      `SELECT pu.id, pu.name, pu.description, pu.effect, pu.value
       FROM power_ups pu
       JOIN storages s ON s.power_up_id = pu.id
       WHERE s.user_id = $1 AND s.active = TRUE`,
@@ -35,7 +35,7 @@ const customizeHelpers = (db) => {
     );
 
     return storage.rows;
-  }
+  };
 
   const updateUserStats = async (userId, { hp, atk, def }) => {
     const updateStats = await db.query(
@@ -47,7 +47,6 @@ const customizeHelpers = (db) => {
   };
 
   const updateEquippedPowerUp = async (userId, powerUpName) => {
-    
     await db.query("UPDATE storages SET active = FALSE WHERE user_id = $1", [
       userId,
     ]);
