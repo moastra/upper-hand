@@ -1,4 +1,4 @@
-.dashboard-container {
+.heading-container {
   text-align: center;
   padding: 40px;
   background-color: white;
@@ -9,14 +9,14 @@
 }
 
 /* Heading styles */
-.dashboard-container h2 {
+.heading-container h2 {
   font-size: 2.5rem;
   color: #ff6f61;
   margin-bottom: 2rem;
 }
 
 /* Link buttons styling */
-.dashboard-container a {
+.heading-container a {
   display: inline-block;
   text-decoration: none;
   background: #00a8ff;
@@ -29,11 +29,11 @@
 }
 
 /* Hover effect for the buttons */
-.dashboard-container a:hover {
+.heading-container a:hover {
   background: #ff6f61;
 }
 
-.dashboard-buttons {
+.buttons-container {
   display: flex;
   flex-direction: row; /* Stack buttons vertically */
   align-items: center;
@@ -42,7 +42,7 @@
 }
 
 /* Button styling */
-.dashboard-buttons a {
+.buttons-container a {
   display: inline-block;
   text-decoration: none;
   background: #00a8ff;

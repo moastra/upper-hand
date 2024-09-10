@@ -44,6 +44,7 @@
 
 /* Style for canvas container */
 .canvas-container {
+  background: transparent;
   position: absolute;
   top: 0;
   left: 0;
@@ -70,12 +71,7 @@
   align-items: center;
   margin: 1rem;
   z-index: 10; /* Ensure controls are above video */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.9
-  ); /* Optional: background for readability */
+  background-color: rgba(255, 255, 255, 0); /* Optional: background for readability */
   /* padding: 1rem; */
   border-radius: 8px;
 }
@@ -149,7 +145,7 @@
   width: 300px;
   border-collapse: collapse;
   overflow-y: auto; /* Scroll if content overflows */
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  /* background-color: rgba(255, 255, 255, 0.9); */
   border-right: 2px solid #ddd; /* Light border for separation */
   padding: 10px; /* Padding inside the container */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a lifted effect */

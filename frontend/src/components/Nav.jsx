@@ -31,7 +31,7 @@ const Nav = () => {
         ) : (
           <div className="user-info">
             <p>
-              Logged in as: <strong>{username}</strong>
+              <b>Logged in as: <strong>{username}</strong></b>
             </p>
             <button onClick={handleLogout}>Logout</button>
           </div>

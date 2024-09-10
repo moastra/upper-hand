@@ -99,6 +99,7 @@ const LoginRegister = () => {
             </div>
           )}
           <button type='submit'>{isLogin ? 'Login' : 'Register'}</button>
+          <br></br>
         </form>
         <div className='toggle-form'>
           <p>
