@@ -174,7 +174,10 @@ const VideoChat = ({
         });
 
         conn.on("data", (data) => {
-          if (data.type === "gestureData") {
+          if (data.type === "startCountdown") {
+            setRemoteCountdownStarted(true); // added
+            setIsCountdownActive(true);
+          } else if (data.type === "gestureData") {
             setRemoteData(data.gestureData);
             console.log("line 92 set remote gesture data:", data.gestureData);
             setRounds((prevRounds) => prevRounds + 1); // Increment rounds count
@@ -225,12 +228,11 @@ const VideoChat = ({
   });
 
   const handleCountdownButtonClick = () => {
-    setIsCountdownActive(true);
-    setCountdownStarted(true);
-
     if (dataConnection && dataConnection.open) {
       dataConnection.send({ type: "startCountdown" });
     }
+    setIsCountdownActive(true);
+    setCountdownStarted(true);
   };
 
   // Evaluate gestures from both players and determine winner
