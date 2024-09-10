@@ -19,6 +19,7 @@ import Customize from "./components/Customize";
 import MatchHistory from "./components/MatchHistory";
 import LoginRegister from "./components/LoginRegister"
 import Homepage from "./components/Homepage";
+import GameLobby from "./components/GameLobby";
 
 
 const App = () => {
@@ -49,7 +50,7 @@ const App = () => {
 
 {/* All stuff which only needs chat function */}
           <Route element={<Chat />}>
-            <Route path="/findmatch" element={<FindMatch />} /> {/* Outlet stuff, works great love it */}
+            <Route path="/findmatch" element={<GameLobby />} /> {/* Outlet stuff, works great love it */}
           </Route>
 
 {/* All stuff that needs both chat and video function */}
