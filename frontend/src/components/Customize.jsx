@@ -22,8 +22,9 @@ const Customize = () => {
 
         const { stats, powerUps, storage } = response.data;
         setStats(stats);
-        setPowerUps(powerUps);
+        setPowerUps(powerUps[0]);
         setStorage(storage);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -49,7 +50,9 @@ const Customize = () => {
   const handleEquipPowerUp = (powerUp) => {
     setEquippedPowerUp(powerUp);
   };
-
+  if (equippedPowerUp) {
+    console.log("equip power", equippedPowerUp);
+  }
   const handleSaveChanges = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -92,7 +95,20 @@ const Customize = () => {
           <div className="item-section">
             <h3>My Item</h3>
             <div className="equipped-item">
-              <img src={`/path/to/${equippedPowerUp}`} alt="Equipped Item" />
+              {powerUps && (
+                <div>
+                  <h2>Selected Power-Up</h2>
+                  <p>
+                    <strong>Name:</strong> {powerUps.name}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {powerUps.description}
+                  </p>
+                  <p>
+                    <strong>Effect:</strong> {powerUps.effect}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           {/* Stats Table */}
@@ -122,19 +138,27 @@ const Customize = () => {
           <div className="storage-section">
             <h3>Storage</h3>
             <table>
-              <tbody>
+              <thead>
                 <tr>
-                  {powerUps.map((powerUp, index) => (
-                    <td key={index}>
-                      <img
-                        src={`/path/to/${powerUp}`}
-                        alt={`Item ${index}`}
-                        onClick={() => handleEquipPowerUp(powerUp)}
-                        className="storage-item"
-                      />
-                    </td>
-                  ))}
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Effect</th>
+                  <th>Action</th>
                 </tr>
+              </thead>
+              <tbody>
+                {storage.map((powerup, index) => (
+                  <tr key={index}>
+                    <td>{powerup.name}</td>
+                    <td>{powerup.description}</td>
+                    <td>{powerup.effect}</td>
+                    <td>
+                      <button onClick={() => handleEquipPowerUp(powerup)}>
+                        Select
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

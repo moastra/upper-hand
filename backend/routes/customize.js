@@ -28,7 +28,7 @@ const customize = (customizeHelpers) => {
   });
 
   router.post("/customize", async (req, res) => {
-    const { stats, equippedPowerUp } = req.body;
+    const { stats, storage, equippedPowerUp } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) return res.status(401).json({ message: "Unauthorized" });
@@ -38,7 +38,7 @@ const customize = (customizeHelpers) => {
       const userId = decoded.userId;
 
       await customizeHelpers.updateUserStats(userId, stats);
-      await customizeHelpers.updateEquippedPowerUp(userId, equippedPowerUp);
+      await customizeHelpers.updateEquippedPowerUp(userId, equippedPowerUp.id);
 
       return res
         .status(200)
