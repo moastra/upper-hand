@@ -1,6 +1,7 @@
 /* Player.css */
 .players {
   text-align: center;
+  color: rgb(122, 6, 148);
   border: 2px solid #333;
   border-radius: 8px;
   padding: 10px;
@@ -9,7 +10,13 @@
   box-shadow: inset 60px 0 120px rgba(3, 97, 248, 0.5),
     inset -60px 0 120px rgba(14, 176, 188, 0.5);
 }
-
+h2 {
+  text-shadow: 0 0 2px #00ffff, 0 0 3px #00ffff, 0 0 4px #00bcd4,
+    0 0 5px #00bcd4, 0 0 6px #00838f, 0 0 7px #00838f, 0 0 8px #00838f;
+}
+.players p {
+  color: black;
+}
 .shadow-low {
   box-shadow: inset 60px 0 120px rgba(255, 112, 67, 0.5),
     inset -60px 0 120px rgba(255, 202, 40, 0.5);
