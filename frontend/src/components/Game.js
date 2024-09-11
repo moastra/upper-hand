@@ -5,16 +5,7 @@ import "./Game.css";
 import { updatePlayerHP } from "../utility/updatePlayerHp";
 import PowerUpInfo, { applyPowerUp } from "../utility/powerUpUtils";
 import { fetchCustomizationData } from "../utility/fetchCustomizeData";
-import axios from "axios";
-
-// const initialPlayerState = {
-//   name: "Player 1",
-//   hp: 300,
-//   attack: 10,
-//   defense: 5,
-//   multiplier: 1,
-//   powerUp: 1,
-// };
+import { sendMatchHistory } from "../utility/matchHistoryhelper";
 
 const Game = ({
   initialGameResult,
@@ -218,24 +209,7 @@ const Game = ({
       player1: false,
       player2: false,
     });
-  };
-
-  //saving the match history
-  const sendMatchHistory = async (match) => {
-    try {
-      const token = localStorage.getItem("token");
-
-      await axios.post("/api/matchhistory", match, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      console.log("Match history updated successfully");
-    } catch (error) {
-      console.error("Error updating match history:", error);
-    }
+    setMatchHistory(null);
   };
 
   const handleRematch = () => {

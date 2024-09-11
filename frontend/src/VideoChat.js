@@ -404,12 +404,12 @@ const VideoChat = ({
         </div>
       </div>
       <div className="controls">
-        <h3>
-          Your Peer ID: {peerId}
+        <h3>Your Peer ID: {peerId}</h3>
+        <div className="copy_host">
           <button onClick={copyIdToClipboard}>Copy</button>
           {/* Find a game button */}
           <button onClick={handleFindGameClick}>Post Game</button>
-        </h3>
+        </div>
         <div>
           <input
             type="text"
@@ -417,11 +417,12 @@ const VideoChat = ({
             value={remotePeerId}
             onChange={(e) => setRemotePeerId(e.target.value)}
           />
-          <a>  </a>
           <button onClick={connectToPeer} disabled={connected}>
             Connect
           </button>
         </div>
+      </div>
+      <div className="count-down">
         <button
           onClick={handleCountdownButtonClick}
           disabled={isCountdownActive}
