@@ -21,9 +21,10 @@ const Customize = () => {
         });
 
         const { stats, powerUps, storage } = response.data;
-        setStats(stats);
+        setStats({ hp: stats.hp, atk: stats.atk, def: stats.def });
         setPowerUps(powerUps[0]);
         setStorage(storage);
+        setEquippedPowerUp(powerUps[0]);
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -41,10 +42,6 @@ const Customize = () => {
       }));
       setSkillPoints(skillPoints - 1);
     }
-  };
-
-  const handleMoveToStorage = (powerUp) => {
-    setEquippedPowerUp(powerUp);
   };
 
   const handleEquipPowerUp = (powerUp) => {
