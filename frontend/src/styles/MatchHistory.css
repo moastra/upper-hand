@@ -1,4 +1,4 @@
-.match-history-container {
+/*.match-history-container {
   padding: 20px
 }
 
@@ -38,4 +38,100 @@
 
 .match-stats p {
   margin: 5px 0;
+}
+  */
+
+  /* Main container */
+.match-history-container {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Heading */
+.match-history-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+}
+
+/* Match History Table */
+.match-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.match-history-table th,
+.match-history-table td {
+  padding: 10px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Table header styling */
+.match-history-table th {
+  background-color: #00a8ff;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Arrow icons for sorting */
+.match-history-table th:hover {
+  background-color: #007bb5;
+}
+
+/* Table row hover effect */
+.match-history-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Data cells styling */
+.match-history-table td {
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Statistics section */
+.match-stats {
+  margin-top: 20px;
+  text-align: center;
+  background-color: #e0f7fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.match-stats h3 {
+  font-size: 1.5rem;
+  color: #007bb5;
+  margin-bottom: 10px;
+}
+
+.match-stats p {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  color: #333;
+}
+
+/* Empty state for no matches */
+.match-history-table td[colspan="5"] {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+/* Loading message */
+.match-history-container p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #007bb5;
 }

@@ -3,6 +3,7 @@
   top: 0;
   left: 0;
   width: 100%;
+  height: 6.25%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,15 +23,19 @@
 }
 
 .nav-title {
-  /* display: flex; */
   position: absolute;
   transform: translateX(-50%);
   left: 50%;
-  /* flex: 2; */
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
-  /* align-items: center; */
   text-align: center;
+  color: white;         /* Ensures the text color is white */
+  text-decoration: none; /* Removes the underline */
+}
+
+.nav-title a {
+  color: white;
+  text-decoration: none;
 }
 
 .nav-links {

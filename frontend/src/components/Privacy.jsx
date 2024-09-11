@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import '../styles/Privacy.css';
 
 const Privacy = () => {
   const [webcam, setWebcam] = useState(true);
@@ -34,7 +35,7 @@ const Privacy = () => {
   };
 
   return (
-    <div>
+    <div className="privacy-settings">
       <h2>Privacy Settings</h2>
       <div>
         <label>
@@ -53,7 +54,7 @@ const Privacy = () => {
             instead:
           </p>
           <img
-            src={`/path/to/avatars/${avatar}`}
+            src={`/avatars/${avatar}`}
             alt="Avatar"
             width="100"
             height="100"

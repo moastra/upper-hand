@@ -19,7 +19,7 @@ const Nav = () => {
       <Link to="/">
         <img src={logo} alt="Logo" className="nav-logo" />
       </Link>
-      <div className="nav-title">Upper Hand</div>
+      <div className="nav-title"> <Link to="/">Upper Hand</Link></div>
       <div className="nav-links">
         <Link to="/dashboard">Dashboard</Link>
 

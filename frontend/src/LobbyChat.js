@@ -38,7 +38,6 @@ const LobbyChat = () => {
       socket.emit("chatMessage", formattedMessage);
       setMessage("");
     }
-    console.log(user);
   };
 
   // Function to handle Enter key press
