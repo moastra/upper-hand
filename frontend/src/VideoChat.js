@@ -5,18 +5,21 @@ import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 import { createPeer, getPeerId } from "./peerHelper";
 import { handleDisconnect } from "./utility/disconnectHelper";
+import { useSearchParams } from "react-router-dom";
+
 import minimize from "./image/minimize2.png";
 const VideoChat = ({
   onGameResult,
-  playerStats,
+  playerStats = {},
   onRematch,
   rematch,
   disconnected,
   onDisconnect,
   onResponse,
   onPeerStats,
-  hostStats,
-  peerStats,
+  hostStats = {}, //for testing purposes, remove after the brackets.
+  peerStats = {}, //for testing purposes, remove after the brackets.
+  addLobby,
 }) => {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
@@ -47,9 +50,17 @@ const VideoChat = ({
 
   const [player1HP, setPlayer1HP] = useState(null);
   const [player2HP, setPlayer2HP] = useState(null);
-  const player1InitialHP = hostStats.hp;
-  const player2InitialHP = peerStats.hp;
+  const player1InitialHP = hostStats.hp || 100;
+  const player2InitialHP = peerStats.hp || 100; //added default values for testing
   const peerStatRef = useRef(peerStats);
+  const [searchParams] = useSearchParams();
+
+  const searchLobbyPeerId = searchParams.get("peerId");
+
+  if (searchLobbyPeerId && remotePeerId === "") {
+    setRemotePeerId(searchLobbyPeerId);
+  }
+
   useEffect(() => {
     if (playerStats.player1 && playerStats.player2) {
       setPlayer1HP(playerStats.player1.hp);
@@ -340,6 +351,10 @@ const VideoChat = ({
     }
   }, [dataConnection, peerStats]);
 
+  const handleFindGameClick = () => {
+    addLobby(peerId);
+  };
+
   const toggleChat = () => {
     setIsMinimized(!isMinimized);
   };
@@ -392,6 +407,8 @@ const VideoChat = ({
         <h3>
           Your Peer ID: {peerId}
           <button onClick={copyIdToClipboard}>Copy</button>
+          {/* Find a game button */}
+          <button onClick={handleFindGameClick}>Post Game</button>
         </h3>
         <div>
           <input
