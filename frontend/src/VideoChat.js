@@ -93,7 +93,7 @@ const VideoChat = ({
           onPeerStats(data.stats);
           peerStatRef.current = data.stats;
         } else {
-          setChat((prevChat) => [...prevChat, { message: data, from: "Peer" }]);
+          setChat((prevChat) => [...prevChat, { message: data, from: "Opponent" }]);
         }
       });
 

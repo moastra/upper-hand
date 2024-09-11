@@ -1,21 +1,30 @@
 .avatar-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Adjust based amnt columns needed */
+  display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .avatar-item {
-  cursor: pointer;
-  padding: 5px;
   border: 2px solid transparent;
-  transition: border 0.3s;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .avatar-item img {
   width: 100px;
   height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .avatar-item.selected {
-  border: 2px solid blue;
+  border-color: #00a8ff; /* Highlight the selected avatar */
+  transform: scale(1.1); /* Slightly enlarge the selected avatar */
+}
+
+.avatar-item:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
 }

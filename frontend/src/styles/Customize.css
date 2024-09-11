@@ -1,9 +1,9 @@
-.customize-container {
+/*.customize-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   color: white; /* Assuming a dark background */
-}
+/*}
 
 .skill-points {
   margin-top: 10px;
@@ -49,4 +49,149 @@
 
 .storage-item:hover {
   transform: scale(1.1);
+}
+*/
+
+/* Container for the customization section */
+.customize-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* Headings */
+.customize-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+.customize-container h3 {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  text-align: left;
+  color: #444;
+}
+
+/* Skill Points */
+.skill-points {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #888;
+}
+
+/* Stats Section */
+.stats-section {
+  margin-top: 20px;
+}
+
+.stats-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stats-section td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.stats-section td:first-child {
+  text-align: left;
+  font-weight: bold;
+}
+
+.stats-section button {
+  padding: 5px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: #00a8ff;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.stats-section button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.stats-section button:hover:not(:disabled) {
+  background-color: #ff6f61;
+}
+
+/* Item Section */
+.item-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.equipped-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #00a8ff;
+}
+
+/* Storage Section */
+.storage-section {
+  margin-top: 20px;
+}
+
+.storage-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.storage-section td {
+  text-align: center;
+  padding: 10px;
+}
+
+.storage-item {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.storage-item:hover {
+  transform: scale(1.1);
+  border: 2px solid #00a8ff;
+  border-radius: 8px;
+}
+
+/* Save Button */
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  background-color: #00a8ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff6f61;
+}
+
+/* Success Message */
+.success-message {
+  text-align: center;
+  color: green;
+  font-weight: bold;
+  margin-top: 20px;
 }
