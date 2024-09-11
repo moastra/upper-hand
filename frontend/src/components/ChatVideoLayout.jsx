@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Game from "./Game";
 
 
-const ChatVideo = () => {
+const ChatVideo = (props) => {
   const [gameResult, setGameResult] = useState("");
   const [playerStats, setPlayerStats] = useState({ player1: {}, player2: {} });
   const [rematch, setRematch] = useState(false);
@@ -53,6 +53,7 @@ const ChatVideo = () => {
         onPeerStats={handlePeer}
         hostStats={hostStats}
         peerStats={peerStats}
+        addLobby={props.addLobby}
       />
       {gameResult && (
         <Game

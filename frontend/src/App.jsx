@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Settings from "./components/Settings";
@@ -23,6 +24,20 @@ import GameLobby from "./components/GameLobby";
 
 
 const App = () => {
+
+  // Function to add a new lobby (from VideoChat)
+  const addLobby = async (peerId) => {
+   
+    const token = localStorage.getItem("token");
+    const headers = {headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+    const response = await axios.post('/api/lobbies', { peerId }, headers);
+
+
+  };
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -50,11 +65,11 @@ const App = () => {
 
 {/* All stuff which only needs chat function */}
           <Route element={<Chat />}>
-            <Route path="/findmatch" element={<GameLobby />} /> {/* Outlet stuff, works great love it */}
+            <Route path="/findmatch" element={<GameLobby addLobby={addLobby} />} /> {/* Outlet stuff, works great love it */}
           </Route>
 
 {/* All stuff that needs both chat and video function */}
-          <Route element={<ChatVideo />}>
+          <Route element={<ChatVideo addLobby={addLobby} />}>
             <Route path="/localgame" element={<LocalGame />} />
           </Route>
 

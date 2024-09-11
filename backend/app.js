@@ -19,6 +19,7 @@ var usersRouter = require('./routes/users');
 const sessionAuth = require('./routes/sessionAuth');
 const customize = require('./routes/customize');
 const matches = require('./routes/matches');
+const lobbies = require('./routes/lobbies');
 var app = express();
 
 
@@ -33,6 +34,7 @@ app.use('/', indexRouter);
 app.use('/api', sessionAuth(authHelpers)); //Login-Logout post routes
 app.use('/api', customize(customizeHelpers)); //Customize - stats routes
 app.use('/api', matches(matchHelper)); // match history - routes
+app.use('/api/lobbies', lobbies()); // match history - routes
 app.use('/api/users', usersRouter(dbHelpers));
 
 const http = app.listen(port, () => {

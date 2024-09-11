@@ -5,9 +5,11 @@ import gestureToChoice, { determineWinner } from "./utility/determinwinner";
 import useCountdown from "./hooks/useCountdown";
 import { createPeer, getPeerId } from "./peerHelper";
 import { handleDisconnect } from "./utility/disconnectHelper";
+import { useSearchParams } from "react-router-dom";
+
 const VideoChat = ({
   onGameResult,
-  playerStats,
+  playerStats = {},
   onRematch,
   rematch,
   disconnected,
@@ -49,6 +51,15 @@ const VideoChat = ({
   const player1InitialHP = hostStats.hp || 100;
   const player2InitialHP = peerStats.hp || 100; //added default values for testing
   const peerStatRef = useRef("");
+  const [searchParams] = useSearchParams();
+
+  const searchLobbyPeerId = searchParams.get("peerId");
+
+  if (searchLobbyPeerId && remotePeerId === "") {
+
+    setRemotePeerId(searchLobbyPeerId);
+  };
+
   useEffect(() => {
     if (playerStats.player1 && playerStats.player2) {
       setPlayer1HP(playerStats.player1.hp);
@@ -363,6 +374,8 @@ const VideoChat = ({
     }
   }, [dataConnection, peerStats]);
 
+  console.log("what is addLobby", addLobby);
+
   const handleFindGameClick = () => {
     addLobby(peerId);
   };
@@ -415,7 +428,7 @@ const VideoChat = ({
           <button onClick={copyIdToClipboard}>Copy</button>
 
           {/* Find a game button */}
-          <button onClick={handleFindGameClick}>Find a Game</button>
+          <button onClick={handleFindGameClick}>Post Game</button>
 
         </h3>
         <div>
