@@ -1,7 +1,7 @@
 const customizeHelpers = (db) => {
   const getUserStats = async (userId) => {
     const stats = await db.query(
-      "SELECT hp, atk, def FROM stats WHERE user_id = $1",
+      "SELECT user_id, hp, atk, def FROM stats WHERE user_id = $1",
       [userId]
     );
 
@@ -38,7 +38,7 @@ const customizeHelpers = (db) => {
 
     return powerUps.rows;
   };
-  
+
   const getUserStorage = async (userId) => {
     const storage = await db.query(
       `SELECT pu.name, pu.description, pu.effect, pu.value
