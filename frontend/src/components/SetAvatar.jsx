@@ -52,6 +52,7 @@ const SetAvatar = (props) => {
     } else {
       setSuccessMessage("Please select an avatar before saving.");
     }
+    window.location.reload();
   };
   
   return (

@@ -36,7 +36,7 @@ const Game = ({
   const [patternMessages, setPatternMessages] = useState([]);
   const [gameOver, setGameOver] = useState(false); // State to check if game is over
   const [winner, setWinner] = useState(null); // State to store the winner
-  const maxRound = 2;
+  const maxRound = 5;
   const [powerUpApplied, setPowerUpApplied] = useState({
     player1: false,
     player2: false,

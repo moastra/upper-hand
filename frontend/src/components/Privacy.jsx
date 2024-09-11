@@ -52,27 +52,27 @@ const Privacy = () => {
     <div className="privacy-settings">
       <h2>Privacy Settings</h2>
       <div>
-        <label>
+        <label className="use-webcam">
           <input
             type="checkbox"
             checked={webcam}
             onChange={handleWebcamChange}
           />
-          Use Webcam?
+          <strong>Use Webcam?</strong>
         </label>
       </div>
       {!webcam && (
-        <div>
-          <p>
-            You currently have the webcam off. You avatar will be displayed
-            instead:
-          </p>
+        <div className="webcam-off">
           <img
             src={`/avatars/${avatar}`}
             alt="Avatar"
             width="100"
             height="100"
           />
+          <p>
+            You currently have the webcam off. You avatar will be displayed
+            instead:
+          </p>
         </div>
       )}
       <button onClick={handleSave}>Save</button>
