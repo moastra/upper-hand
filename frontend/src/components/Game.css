@@ -8,6 +8,7 @@
     0
   ); /* Center horizontally, but keep vertical alignment as is */
   background: white;
+  color: black;
   border: 1px solid #ccc;
   padding: 20px;
   z-index: 1000;
