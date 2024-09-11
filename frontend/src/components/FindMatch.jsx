@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import '../styles/FindMatch.css'; // Import the CSS file
 
 const FindMatch = () => {
   const [lobbies, setLobbies] = useState([]);
@@ -19,7 +19,6 @@ const FindMatch = () => {
         setLobbies(response.data);
         console.log('response.data = =', response.data);
 
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -28,13 +27,12 @@ const FindMatch = () => {
     fetchData();
   }, []);
 
-  
   return (
-    <div>
+    <div className="find-match-container">
       <h2>Available Game Lobbies</h2>
 
       {/* Table to display available lobbies */}
-      <table border="1" cellPadding="10" cellSpacing="0">
+      <table className="match-history-table">
         <thead>
           <tr>
             <th>Peer ID</th>
@@ -46,15 +44,18 @@ const FindMatch = () => {
           {lobbies.length > 0 ? (
             lobbies.map((lobby, index) => (
               <tr key={index}>
-                
-                <td><Link to={`/localgame?peerId=${lobby.peerId}`}>{lobby.peerId}</Link></td>
+                <td>
+                  <Link to={`/localgame?peerId=${lobby.peerId}`}>
+                    {lobby.peerId}
+                  </Link>
+                </td>
                 <td>{lobby.username}</td>
                 <td>{new Date(lobby.createdAt).toLocaleString()}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="2">No open lobbies found</td>
+              <td colSpan="3" className="no-lobbies">No open lobbies found</td>
             </tr>
           )}
         </tbody>
