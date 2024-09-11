@@ -49,7 +49,7 @@ const FindMatch = () => {
                 
                 <td><Link to={`/localgame?peerId=${lobby.peerId}`}>{lobby.peerId}</Link></td>
                 <td>{lobby.username}</td>
-                <td>{lobby.createDate}</td>
+                <td>{new Date(lobby.createdAt).toLocaleString()}</td>
               </tr>
             ))
           ) : (
