@@ -5,15 +5,7 @@ import "./Game.css";
 import { updatePlayerHP } from "../utility/updatePlayerHp";
 import PowerUpInfo, { applyPowerUp } from "../utility/powerUpUtils";
 import { fetchCustomizationData } from "../utility/fetchCustomizeData";
-
-// const initialPlayerState = {
-//   name: "Player 1",
-//   hp: 300,
-//   attack: 10,
-//   defense: 5,
-//   multiplier: 1,
-//   powerUp: 1,
-// };
+import { sendMatchHistory } from "../utility/matchHistoryhelper";
 
 const Game = ({
   initialGameResult,
@@ -44,13 +36,14 @@ const Game = ({
   const [patternMessages, setPatternMessages] = useState([]);
   const [gameOver, setGameOver] = useState(false); // State to check if game is over
   const [winner, setWinner] = useState(null); // State to store the winner
-  const maxRound = 5;
+  const maxRound = 2;
   const [powerUpApplied, setPowerUpApplied] = useState({
     player1: false,
     player2: false,
   });
   const [showRematchPopup, setShowRematchPopup] = useState(false);
   const [initialPlayerState, setInitialPlayerState] = useState({});
+  const [matchHistory, setMatchHistory] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,6 +52,7 @@ const Game = ({
         const { name, stats, powerUps } = data;
         console.log("name", name);
         const initPlayer = {
+          id: stats.user_id,
           name: name.username,
           hp: stats.hp,
           attack: stats.atk,
@@ -161,20 +155,30 @@ const Game = ({
               )
             : prev.hp,
       }));
+
       // Check if the game should end
       if (round >= maxRound || player1.hp <= 0 || player2.hp <= 0) {
         let winner;
+        let loser;
         if (player1.hp <= 0 && player2.hp <= 0) {
           winner = "Draw";
         } else if (player1.hp <= 0) {
-          winner = player2.name;
+          winner = player2;
+          loser = player1;
         } else if (player2.hp <= 0) {
-          winner = player1.name;
+          winner = player1;
+          loser = player2;
         } else {
-          winner = player1.hp > player2.hp ? player1.name : player2.name;
+          winner = player1.hp > player2.hp ? player1 : player2;
+          loser = winner === player1 ? player2 : player1;
         }
-        setWinner(winner);
+        setWinner(winner.name);
         setGameOver(true);
+        setMatchHistory({
+          winnerId: winner.id,
+          loserId: loser.id,
+          rounds: round,
+        });
       }
       setProcessingComplete(false); // Reset the flag for future updates
       setShowRematchPopup(true);
@@ -205,8 +209,12 @@ const Game = ({
       player1: false,
       player2: false,
     });
+    setMatchHistory(null);
   };
+
   const handleRematch = () => {
+    sendMatchHistory(matchHistory);
+
     resetGameState();
     onRematch(true); // Notify the parent component if needed
     onPlayerStatsUpdate({
@@ -216,6 +224,8 @@ const Game = ({
   };
 
   const handleDisconnect = () => {
+    sendMatchHistory(matchHistory);
+
     resetGameState();
     onDisconnect(true); // Notify the parent component if needed
     onPlayerStatsUpdate({
@@ -223,6 +233,7 @@ const Game = ({
       player2: { ...player2 },
     });
   };
+
   useEffect(() => {
     if (response === true) {
       resetGameState();
@@ -233,6 +244,7 @@ const Game = ({
       onResponse(false);
     }
   }, [response]);
+
   return (
     <div className="player-container">
       <div className="player1-container">

@@ -15,8 +15,24 @@ const matchHelper = (db) => {
     return result.rows;
   };
 
+  const updateMatchHistoryByUserId = async (match) => {
+    const query = `
+  INSERT INTO matches (winner_id, loser_id, rounds)
+  VALUES ($1, $2, $3)
+  RETURNING id;
+  `;
+    const values = [match.winnerId, match.loserId, match.rounds];
+    try {
+      const result = await db.query(query, values);
+      return result.rows[0].id; // Return the ID of the newly inserted match
+    } catch (error) {
+      console.error("Error inserting match record:", error);
+      throw new Error("Unable to insert match record");
+    }
+  };
   return {
-    getMatchHistoryByUserId
+    getMatchHistoryByUserId,
+    updateMatchHistoryByUserId,
   };
 };
 module.exports = matchHelper;
