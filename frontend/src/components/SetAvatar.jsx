@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 // import { avatar } from '../avatars'
 import "../styles/SetAvatar.css"
+import axios from 'axios';
 
-const SetAvatar = () => {
+const SetAvatar = (props) => {
   const avatars = [
     "avatar1.png",
     "avatar2.png",
@@ -31,11 +32,23 @@ const SetAvatar = () => {
   };
 
   // Handle save action
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedAvatar) {
-      setSuccessMessage(`Avatar "${selectedAvatar}" is selected!`);
-      // This is where you'd send the selected avatar to the backend via an Axios POST request.
-      // axios.post("/api/saveAvatar", { avatar: selectedAvatar }).then(response => console.log(response))
+      try {
+        const token = localStorage.getItem("token"); // Assuming you use JWT for authentication
+        const response = await axios.post("/api/setAvatar", 
+          { avatar: selectedAvatar }, 
+          { headers: { Authorization: `Bearer ${token}` } } // Add auth token if needed
+        );
+        
+        // Show success message based on response
+        if (response.status === 200) {
+          setSuccessMessage(`Avatar "${selectedAvatar}" is selected and saved!`);
+        }
+      } catch (error) {
+        setSuccessMessage("Error saving avatar. Please try again.");
+        console.error("Error saving avatar:", error);
+      }
     } else {
       setSuccessMessage("Please select an avatar before saving.");
     }

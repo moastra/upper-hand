@@ -1,12 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import '../styles/Nav.css';
-import logo from './logo.png'
+import logo from './logo.png';
+import { fetchCustomizationData } from "../utility/fetchCustomizeData";
 
 const Nav = () => {
   let navigate = useNavigate();
 
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
+  const [avatar, setAvatar] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCustomizationData();
+        const { avatar } = data;
+        setAvatar(avatar);
+      } catch (error) {
+        console.log("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -33,6 +49,12 @@ const Nav = () => {
             <p>
               <b>Logged in as: <strong>{username}</strong></b>
             </p>
+            <img
+              src={`/avatars/${avatar}`}
+              alt="Avatar"
+              width="100"
+              height="100"
+            />
             <button onClick={handleLogout}>Logout</button>
           </div>
         )}

@@ -11,7 +11,7 @@ const customizeHelpers = (db) => {
 
     return stats.rows[0];
   };
-
+  
   const getUsernameById = async (userId) => {
     const user = await db.query("SELECT username FROM users WHERE ID = $1", [
       userId,
@@ -24,6 +24,16 @@ const customizeHelpers = (db) => {
     const userRecord = user.rows[0];
     console.log("user records;", userRecord);
     return userRecord;
+  };
+
+  const getAvatarById = async (userId) => {
+    const avatar = await db.query("SELECT avatar FROM users WHERE ID = $1", [
+      userId,
+    ]);
+
+    const avatarRecord = avatar.rows[0].avatar;
+    console.log("avatar records;", avatarRecord);
+    return avatarRecord;
   };
 
   const getUserPowerUps = async (userId) => {
@@ -79,6 +89,7 @@ const customizeHelpers = (db) => {
   };
 
   return {
+    getAvatarById,
     getUsernameById,
     getUserStats,
     getUserPowerUps,

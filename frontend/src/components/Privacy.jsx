@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import '../styles/Privacy.css';
+import { fetchCustomizationData } from "../utility/fetchCustomizeData";
 
 const Privacy = () => {
   const [webcam, setWebcam] = useState(true);
-  const [avatar, setAvatar] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [avatar, setAvatar] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchCustomizationData();
+        const { avatar } = data;
+        setAvatar(avatar);
+      } catch (error) {
+        console.log("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {

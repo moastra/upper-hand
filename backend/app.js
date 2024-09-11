@@ -12,6 +12,7 @@ const dbHelpers = require("./db/helpers/dbHelpers")(db);
 const authHelpers = require("./db/helpers/authHelpers")(db);
 const customizeHelpers = require("./db/helpers/customizeHelpers")(db);
 const matchHelper = require("./db/helpers/matchHelpers")(db);
+const avatarHelpers = require("./db/helpers/avatarHelpers")(db);
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -19,6 +20,7 @@ const sessionAuth = require("./routes/sessionAuth");
 const customize = require("./routes/customize");
 const matches = require("./routes/matches");
 const lobbies = require("./routes/lobbies");
+const avatar = require("./routes/avatar");
 var app = express();
 
 app.use(logger("dev"));
@@ -33,6 +35,7 @@ app.use("/api", customize(customizeHelpers)); //Customize - stats routes
 app.use("/api", matches(matchHelper)); // match history - routes
 app.use("/api/lobbies", lobbies()); // match history - routes
 app.use("/api/users", usersRouter(dbHelpers));
+app.use("/api/setAvatar", avatar(avatarHelpers));
 
 const http = app.listen(port, () => {
   console.log(`Server listening on PORT: ${port}`);

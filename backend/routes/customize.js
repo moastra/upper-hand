@@ -14,12 +14,13 @@ const customize = (customizeHelpers) => {
       const decoded = jwt.verify(token, SECRET_KEY);
       const userId = decoded.userId;
 
+      const avatar = await customizeHelpers.getAvatarById(userId);
       const name = await customizeHelpers.getUsernameById(userId);
       const stats = await customizeHelpers.getUserStats(userId);
       const powerUps = await customizeHelpers.getUserPowerUps(userId);
       const storage = await customizeHelpers.getUserStorage(userId);
 
-      return res.status(200).json({ name, stats, powerUps, storage });
+      return res.status(200).json({ avatar, name, stats, powerUps, storage });
     } catch (error) {
       console.error("Error fetching customization data:", error);
       return res.status(500).json({ message: error.message });
