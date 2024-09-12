@@ -403,8 +403,8 @@ const VideoChat = ({
           <canvas ref={canvasRef} />
         </div>
       </div>
+      <h3>Your Peer ID: {peerId}</h3>
       <div className="controls">
-        <h3>Your Peer ID: {peerId}</h3>
         <div className="copy_host">
           <button onClick={copyIdToClipboard}>Copy</button>
           {/* Find a game button */}

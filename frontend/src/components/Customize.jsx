@@ -24,7 +24,10 @@ const Customize = () => {
         setStats({ hp: stats.hp, atk: stats.atk, def: stats.def });
         setPowerUps(powerUps[0]);
         setStorage(storage);
-        setEquippedPowerUp(powerUps[0]);
+        // Set the initially fetched power-up as the equipped power-up
+        if (powerUps.length > 0) {
+          setEquippedPowerUp(powerUps[0]);
+        }
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -92,19 +95,21 @@ const Customize = () => {
           <div className="item-section">
             <h3>My Item</h3>
             <div className="equipped-item">
-              {powerUps && (
+              {equippedPowerUp ? (
                 <div>
                   <h2>Selected Power-Up</h2>
                   <p>
-                    <strong>Name:</strong> {powerUps.name}
+                    <strong>Name:</strong> {equippedPowerUp.name}
                   </p>
                   <p>
-                    <strong>Description:</strong> {powerUps.description}
+                    <strong>Description:</strong> {equippedPowerUp.description}
                   </p>
                   <p>
-                    <strong>Effect:</strong> {powerUps.effect}
+                    <strong>Effect:</strong> {equippedPowerUp.effect}
                   </p>
                 </div>
+              ) : (
+                <p>No power-up equipped</p>
               )}
             </div>
           </div>

@@ -87,7 +87,9 @@
 }
 .controls .copy_host {
   display: flex;
-  gap: 20px; /* Adds space between buttons */
+  padding: none;
+  margin: none;
+  justify-content: space-evenly;
   flex-direction: row;
 }
 
