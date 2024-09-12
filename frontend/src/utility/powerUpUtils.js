@@ -14,6 +14,11 @@ const powerUps = {
     description: "Increases DEF by 10",
     effect: 10,
   },
+  4: {
+    name: "Multiplier Boost",
+    description: "Increases multiplier by 20%",
+    effect: 0.2,
+  },
 };
 
 export const applyPowerUp = (player, powerUpId) => {
@@ -36,6 +41,11 @@ export const applyPowerUp = (player, powerUpId) => {
       return {
         ...player,
         defense: player.defense + powerUp.effect, // Increase defense by amount
+      };
+    case 4: // Multiplier Boost
+      return {
+        ...player,
+        multiplier: player.multiplier + powerUp.effect, // Increase Multiplier by amount
       };
     default:
       return player;
