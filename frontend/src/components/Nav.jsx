@@ -10,6 +10,7 @@ const Nav = () => {
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
   const [avatar, setAvatar] = useState();
+  
 
   useEffect(() => {
     const fetchData = async () => {

@@ -169,7 +169,10 @@ const Game = ({
           winner = player1;
           loser = player2;
         } else {
-          winner = player1.hp > player2.hp ? player1 : player2;
+          winner =
+            player1.hp / initialPlayerState.hp > player2.hp / peerStats.hp
+              ? player1
+              : player2;
           loser = winner === player1 ? player2 : player1;
         }
         setWinner(winner.name);

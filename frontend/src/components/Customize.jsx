@@ -24,10 +24,11 @@ const Customize = () => {
         setStats({ hp: stats.hp, atk: stats.atk, def: stats.def });
         setPowerUps(powerUps[0]);
         setStorage(storage);
-        // Set the initially fetched power-up as the equipped power-up
+
         if (powerUps.length > 0) {
           setEquippedPowerUp(powerUps[0]);
         }
+
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -93,26 +94,23 @@ const Customize = () => {
 
           {/* My Item Section */}
           <div className="item-section">
-            <h3>My Item</h3>
             <div className="equipped-item">
               {equippedPowerUp ? (
                 <div>
                   <h2>Selected Power-Up</h2>
                   <p>
-                    <strong>Name:</strong> {equippedPowerUp.name}
+                    <strong>{equippedPowerUp.name}</strong>
                   </p>
                   <p>
-                    <strong>Description:</strong> {equippedPowerUp.description}
-                  </p>
-                  <p>
-                    <strong>Effect:</strong> {equippedPowerUp.effect}
+                    <strong>{equippedPowerUp.description}</strong>
                   </p>
                 </div>
               ) : (
-                <p>No power-up equipped</p>
+                <p> No power-ups equipped</p>
               )}
             </div>
           </div>
+
           {/* Stats Table */}
           <div className="stats-section">
             <h3>My Stats</h3>
@@ -140,27 +138,22 @@ const Customize = () => {
           <div className="storage-section">
             <h3>Storage</h3>
             <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Effect</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
               <tbody>
-                {storage.map((powerup, index) => (
-                  <tr key={index}>
-                    <td>{powerup.name}</td>
-                    <td>{powerup.description}</td>
-                    <td>{powerup.effect}</td>
-                    <td>
-                      <button onClick={() => handleEquipPowerUp(powerup)}>
-                        Select
-                      </button>
+                <tr>
+                  {storage.map((powerup, index) => (
+                    <td key={index}>
+                      <p
+                        onClick={() => handleEquipPowerUp(powerup)}
+                        className="storage-item"
+                        style={{ cursor: "pointer" }}
+                      >
+                        {powerup.name}
+                        <br />
+                        {powerup.description}
+                      </p>
                     </td>
-                  </tr>
-                ))}
+                  ))}
+                </tr>
               </tbody>
             </table>
           </div>
