@@ -184,7 +184,10 @@
 .video-hidden {
   display: none;
 }
-
+.peer_id {
+  position: fixed;
+  bottom: 20%;
+}
 .table-container {
   position: fixed;
   top: 20%;
