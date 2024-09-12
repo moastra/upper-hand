@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Body and background setup */
@@ -15,7 +15,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin: 0;
 }
 
@@ -71,6 +71,8 @@ body {
 .game-info h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
+  text-shadow: rgb(0, 150, 170) 0px 0px 4px, rgb(0, 150, 170) 0px 0px 5px,
+    rgb(0, 105, 114) 0px 0px 6px;
 }
 
 .game-info p {
